@@ -1,0 +1,4 @@
+[build]
+base = "/stacks-v3/"
+publish = "/stacks-v3/build/"
+command = "npm run build"
