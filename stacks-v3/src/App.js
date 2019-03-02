@@ -139,7 +139,6 @@ class App extends Component {
       oldStack : newStack
     })
   }
-
   habitResultHandler = (result) => {
     switch (result){
       case "neutral" :
@@ -175,13 +174,16 @@ class App extends Component {
     const newStack = Object.assign({}, oldStack);
 
     const result = newStack[stackId][itemId].result;
-    const updatedResult = this.habitResultHandler(result);
+    const updatedResult = this.habitResultHandler(result); //toggle through results
 
     if (updatedResult === "complete"){
+      //see if the easy complete is used
       this.habitEasyComplete(itemId, stackId);
     }
 
     newStack[stackId][itemId].result = updatedResult;
+
+    localStorage.setItem("Habit", updatedResult);
 
     //add to habit log
     const log = newStack[stackId][itemId].log;
@@ -192,7 +194,6 @@ class App extends Component {
     this.setState({oldStack : newStack})
 
   }
-
   onSortEnd = ({oldIndex, newIndex, collection}) => {
     this.setState(({stacks}) => {
       const newstacks = [...stacks];
@@ -205,7 +206,6 @@ class App extends Component {
       return {stacks: newstacks};
     });
   };
-
   addHabit = (stackId) => {
 
     const oldStack = this.state.stacks;
@@ -230,15 +230,12 @@ class App extends Component {
 
     this.setState({oldStack : newStack})
   }
-
   toggleAddMode = () => {
     const activeState = this.state.activeStates;
     const newActiveState = activeState;
     newActiveState.addModeIsActive = !activeState.addModeIsActive;
     this.setState({ activeState : newActiveState})
   }
-
-
   checkIsSameDay = (thisDay, thisMonth) => {
     if (thisDay !== this.state.lastLoggedDate && thisMonth !== this.state.lastLoggedMonth){
       console.log("it's a new day!");
