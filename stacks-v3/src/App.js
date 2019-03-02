@@ -154,7 +154,7 @@ class App extends Component {
       if (itemId > i && habit.result ==="neutral"){
         return habit.result = "complete";
       }
-      return
+      return false;
     });
 
     this.setState({oldStack : newStack})
@@ -305,7 +305,7 @@ class App extends Component {
 
         <Typography />
         <GlobalStyles />
-        <h2>v4</h2>
+        <h2>v5</h2>
         <ViewStacks
           stacks={this.state}
           stacksInfo={this.state.stacksInfo}

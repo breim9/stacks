@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Stack from './Stack';
-import AddHabitModule from './AddHabitModule';
 import styled from 'styled-components';
 import '../App.css';
 import {sortableContainer} from 'react-sortable-hoc';

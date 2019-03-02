@@ -34,19 +34,19 @@ const Toggle = styled.div`
   align-items: center;
 `
 
-const BarContainer = styled.div`
-  height: 1.25rem;
-  width: 1.625rem;
-  /* margin: 0.8125rem auto 0 auto; */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`
-const Bar = styled.div`
-  width: 26px;
-  height: 2px;
-  background-color: #3D3D3D
-`
+// const BarContainer = styled.div`
+//   height: 1.25rem;
+//   width: 1.625rem;
+//   /* margin: 0.8125rem auto 0 auto; */
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+// `
+// const Bar = styled.div`
+//   width: 26px;
+//   height: 2px;
+//   background-color: #3D3D3D
+// `
 
 const Burger = styled.div`
   & {
@@ -176,11 +176,6 @@ function Stack(props){
           <Burger open={props.height}>
             <BurgerInnerDiv open={props.height}></BurgerInnerDiv>
           </Burger>
-          {/*<BarContainer>
-            <Bar />
-            <Bar />
-            <Bar />
-          </BarContainer> */}
         </Toggle>
         <StackName>{props.stacksInfo[props.stacksIndex].name}</StackName>
       </div>
