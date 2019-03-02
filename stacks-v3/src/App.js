@@ -306,7 +306,7 @@ class App extends Component {
 
         <Typography />
         <GlobalStyles />
-
+        <h2>v3</h2>
         <ViewStacks
           stacks={this.state}
           stacksInfo={this.state.stacksInfo}
