@@ -148,8 +148,7 @@ class App extends Component {
   habitEasyComplete = (itemId, stackId) => {
     //turn earlier habits in stack into 'complete' if they're neutral
 
-    const oldStack = this.state.stacks;
-    const newStack = Object.assign({}, oldStack);
+    const newStack = [...this.state.stacks];
 
     newStack[stackId] = newStack[stackId].map( (habit, i) => {
       if (itemId > i && habit.result ==="neutral"){
@@ -306,7 +305,7 @@ class App extends Component {
 
         <Typography />
         <GlobalStyles />
-        <h2>v3</h2>
+        <h2>v4</h2>
         <ViewStacks
           stacks={this.state}
           stacksInfo={this.state.stacksInfo}
