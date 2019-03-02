@@ -284,7 +284,7 @@ class App extends Component {
         <Typography />
         <GlobalStyles />
 
-        <h1>V1</h1>
+        <h1>V2</h1>
         <ViewStacks
           stacks={this.state}
           stacksInfo={this.state.stacksInfo}
