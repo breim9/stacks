@@ -64,14 +64,14 @@ const Burger = styled.div`
   }
   &:before {
     ${( height ) => {
-      if (height.open != 0){
+      if (height.open !== 0){
         return ( `transform: translateY(8px) rotate(135deg);`)
       }
     }}
   }
   &:after {
     ${( height ) => {
-      if (height.open != 0){
+      if (height.open !== 0){
         return ( `transform: translateY(-8px) rotate(-135deg);`)
       }
     }}
@@ -88,7 +88,7 @@ const BurgerInnerDiv = styled.div`
     margin: 5px 0;
     transition: all 0.2s ease-in-out;
     ${( height ) => {
-      if (height.open != 0){
+      if (height.open !== 0){
         return ( `transform: scale(0);`)
       }
     }}

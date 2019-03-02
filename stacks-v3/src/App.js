@@ -123,22 +123,14 @@ class App extends Component {
       addModeIsActive : false,
       addModuleIsActive : false,
       editModeIsActive : false,
-    }
+    },
   };
 
 
 
-  toggleStack = (id) => {
 
-    let oldStack = this.state.stacksInfo[id];
-    let newStack = oldStack;
 
-    newStack.height = oldStack.height === 0 ? 'auto' : 0;
-
-    this.setState({
-      oldStack : newStack
-    })
-  }
+  //HABITS
   habitResultHandler = (result) => {
     switch (result){
       case "neutral" :
@@ -170,9 +162,7 @@ class App extends Component {
   }
   logHabit = (itemId, stackId) => {
 
-    const oldStack = this.state.stacks;
-    const newStack = Object.assign({}, oldStack);
-
+    const newStack = [...this.state.stacks];
     const result = newStack[stackId][itemId].result;
     const updatedResult = this.habitResultHandler(result); //toggle through results
 
@@ -183,33 +173,18 @@ class App extends Component {
 
     newStack[stackId][itemId].result = updatedResult;
 
-    localStorage.setItem("Habit", updatedResult);
-
     //add to habit log
     const log = newStack[stackId][itemId].log;
     log[this.state.dayOfHabit] = updatedResult;
     newStack[stackId][itemId].log = log;
-    console.log("log is ", log);
 
-    this.setState({oldStack : newStack})
+    this.setState({stacks : newStack})
+    this.updateLocaLStorage(newStack);
 
   }
-  onSortEnd = ({oldIndex, newIndex, collection}) => {
-    this.setState(({stacks}) => {
-      const newstacks = [...stacks];
-
-      newstacks[collection] = arrayMove(
-        stacks[collection],
-        oldIndex,
-        newIndex,
-      );
-      return {stacks: newstacks};
-    });
-  };
   addHabit = (stackId) => {
 
-    const oldStack = this.state.stacks;
-    const newStack = Object.assign({}, oldStack);
+    const newStack = [...this.state.stacks]
 
     const activeStates = this.state.activeStates;
     const newActiveStates = activeStates;
@@ -228,7 +203,33 @@ class App extends Component {
       }
     )
 
-    this.setState({oldStack : newStack})
+    this.setState({stacks : newStack})
+    this.updateLocaLStorage(newStack);
+  }
+  //dragging habits in new order
+  onSortEnd = ({oldIndex, newIndex, collection}) => {
+    this.setState(({stacks}) => {
+      const newstacks = [...stacks];
+
+      newstacks[collection] = arrayMove(
+        stacks[collection],
+        oldIndex,
+        newIndex,
+      );
+      return {stacks: newstacks};
+    });
+  };
+
+  //OTHER
+  toggleStack = (id) => {
+    let toggleStack = this.state.stacksInfo[id];
+    let newStack = toggleStack;
+
+    newStack.height = toggleStack.height === 0 ? 'auto' : 0;
+
+    this.setState({
+      toggleStack : newStack
+    })
   }
   toggleAddMode = () => {
     const activeState = this.state.activeStates;
@@ -238,11 +239,11 @@ class App extends Component {
   }
   checkIsSameDay = (thisDay, thisMonth) => {
     if (thisDay !== this.state.lastLoggedDate && thisMonth !== this.state.lastLoggedMonth){
-      console.log("it's a new day!");
+      // console.log("it's a new day!");
       return false;
     }
     else if (thisDay === this.state.lastLoggedDate && thisMonth === this.state.lastLoggedMonth){
-      console.log("same day");
+      // console.log("same day");
       return true;
     }
   }
@@ -256,13 +257,38 @@ class App extends Component {
     this.setState({dayOfHabit : nextDayOfHabit});
   }
 
+  //STORAGE
+  updateLocaLStorage = (newStack) => {
+      //should be called whenever a habit is logged asap, in case the users
+      //then immediately close the app
+
+      localStorage.setItem("Stacks", JSON.stringify(newStack));
+      console.log("habit stored : ", newStack);
+
+  }
+  populateStateFromStorage = () => {
+    //use localStorage to re-populate state when app is refreshed
+    let newStack = JSON.parse(localStorage.getItem('Stacks'));
+
+    if (newStack) {
+      this.setState({ stacks : newStack})
+      console.log("populating state with : ", newStack);
+    }
+  }
+
 
   componentDidMount() {
 
+    //populate storedHabit in state from localStorage from previous sessions
+    this.populateStateFromStorage();
+
+    // localStorage.clear();
     let fullDate = new Date();
     let thisDay = fullDate.getDate();
     let thisMonth = fullDate.getMonth();
     let res = this.checkIsSameDay(thisDay, thisMonth);
+
+
 
     if (!res){
       this.updateDate(thisDay, thisMonth);
@@ -271,8 +297,8 @@ class App extends Component {
 
 
 
-  render() {
 
+  render() {
 
 
     return (
@@ -281,7 +307,6 @@ class App extends Component {
         <Typography />
         <GlobalStyles />
 
-        <h1>V2</h1>
         <ViewStacks
           stacks={this.state}
           stacksInfo={this.state.stacksInfo}
