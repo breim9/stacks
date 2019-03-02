@@ -12,7 +12,7 @@ Stack Component
 **************/
 
 const StackName = styled.h3`
-  font-size: 1.375rem;
+  font-size: 1.063rem;
   display: inline-block;
   padding-left: 1.25rem;
   color:#4E4E4E;
@@ -23,8 +23,8 @@ const Toggle = styled.div`
   display: inline-block;
   vertical-align: middle;
   margin-bottom: 10px;
-  width: 3.125rem;
-  height: 3rem;
+  width: 36px;
+  height: 36px;
   border-radius: 5px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
   background-color: #ffffff;
@@ -34,23 +34,10 @@ const Toggle = styled.div`
   align-items: center;
 `
 
-// const BarContainer = styled.div`
-//   height: 1.25rem;
-//   width: 1.625rem;
-//   /* margin: 0.8125rem auto 0 auto; */
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: space-between;
-// `
-// const Bar = styled.div`
-//   width: 26px;
-//   height: 2px;
-//   background-color: #3D3D3D
-// `
-
 const Burger = styled.div`
   & {
-    width: 50%;
+    width: 100%;
+    transition: transform 0.2s ease-in-out;
   }
   &:before,
   &:after {
@@ -58,42 +45,63 @@ const Burger = styled.div`
     border-radius: 3px;
     content: "";
     display: block;
-    height: 0.2rem;
+    height: 10px;
+    width: 1px;
     margin: 5px 0;
-    transition: all 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
   }
   &:before {
-    ${( height ) => {
-      if (height.open !== 0){
-        return ( `transform: translateY(8px) rotate(135deg);`)
-      }
-    }}
+    transform: translateY(4px) translateX(18px) rotate(135deg);
   }
   &:after {
+    transform: translateY(-4px) translateX(18px) rotate(-135deg);
+  }
+  & {
     ${( height ) => {
       if (height.open !== 0){
-        return ( `transform: translateY(-8px) rotate(-135deg);`)
+        return ( `transform: rotate(90deg);`)
       }
     }}
   }
 `
 
-const BurgerInnerDiv = styled.div`
-  & {
-    background-color: #000;
-    border-radius: 3px;
-    content: "";
-    display: block;
-    height: 0.2rem;
-    margin: 5px 0;
-    transition: all 0.2s ease-in-out;
-    ${( height ) => {
-      if (height.open !== 0){
-        return ( `transform: scale(0);`)
-      }
-    }}
-  }
-`
+// &:before {
+//   ${( height ) => {
+//     if (height.open !== 0){
+//       return ( `transform: translateY(14px) rotate(135deg);`)
+//     }
+//     else {
+//       return ( `transform: translateY(14px) rotate(-135deg);`)
+//     }
+//   }}
+// }
+// &:after {
+//   ${( height ) => {
+//     if (height.open !== 0){
+//       return ( `transform: translateY(-14px) rotate(-135deg);`)
+//     }
+//     else {
+//       return ( `transform: translateY(-14px) rotate(135deg);`)
+//     }
+//   }}
+// }
+
+// const BurgerInnerDiv = styled.div`
+//   & {
+//     background-color: #000;
+//     border-radius: 3px;
+//     content: "";
+//     display: block;
+//     height: 0.2rem;
+//     margin: 5px 0;
+//     transition: all 0.2s ease-in-out;
+//     ${( height ) => {
+//       if (height.open !== 0){
+//         return ( `transform: scale(0);`)
+//       }
+//     }}
+//   }
+// `
 
 const StackBottom = styled.div`
   display: flex;
@@ -116,21 +124,38 @@ const StreakCount = styled.div`
   display:inline-flex;
   justify-content:center;
   align-items:center;
-  height: 3.25rem;
-  width: 3.25rem;
+  height: 40px;
+  width: 40px;
   background: #FFFFFF;
   box-shadow: 0 0 6px 0 rgba(0,0,0,0.14);
   border-radius: 99px;
   font-family: Poppins;
   font-weight:700;
-  font-size: 1.3rem;
+  font-size: 0.938rem;
   color: #656464;
 `
 
 const StackBody = styled.ul`
+& {
+  position:relative;
   padding-left: 0.625rem;
   margin-bottom: 0px;
+  margin-top: 10px;
+}
+&:after {
+  position: absolute;
+  display: block;
+  content : "";
+  width : 1px;
+  height : calc(100% - 56px);
+  background-color:#E0DDDD;
+  top:28px;
+  left:22px;
+  z-index: -1;
+}
 `
+
+
 
 const AddSection = styled.div`
   display: flex;
@@ -174,7 +199,7 @@ function Stack(props){
       <div className="stackHeader">
         <Toggle onClick={() => props.toggleStack(props.stacksIndex)}>
           <Burger open={props.height}>
-            <BurgerInnerDiv open={props.height}></BurgerInnerDiv>
+            {/* <BurgerInnerDiv open={props.height}></BurgerInnerDiv>*/}
           </Burger>
         </Toggle>
         <StackName>{props.stacksInfo[props.stacksIndex].name}</StackName>

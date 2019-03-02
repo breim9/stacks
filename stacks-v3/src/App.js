@@ -40,6 +40,7 @@ const AppStyled = styled.div`
   position:relative;
   overflow:hidden;
   width:100%;
+  height: 100%;
   max-width: 500px;
   margin: 0 auto;
   display: block;
@@ -63,11 +64,13 @@ const GlobalStyles = createGlobalStyle`
   body {
     font-family: 'Roboto';
     font-weight: 400;
+    height: 100%;
   }
   html {
     font-size: 16px;
     overflow: scroll;
     overflow-x: hidden;
+    height: 100%;
   }
   ::-webkit-scrollbar {
     width: 0px;  /* remove scrollbar space */
@@ -76,12 +79,14 @@ const GlobalStyles = createGlobalStyle`
   button {
       padding: 0; border: none; font: inherit; color: inherit; background-color: transparent;
       border-radius: 6px;
-      height: 40px;
-      width:85px;
-      padding-top: 5px;
+      height: 27px;
+      // width:85px;
+      padding-top: 3px;
+      padding-left: 13px;
+      padding-right: 13px;
       font-family: Poppins;
       font-weight: 500;
-      font-size: 1.25rem;
+      font-size: 0.938rem;
       color: #3D3D3D;
       text-align: center;
   }
@@ -305,7 +310,7 @@ class App extends Component {
 
         <Typography />
         <GlobalStyles />
-        <h2>v7</h2>
+
         <ViewStacks
           stacks={this.state}
           stacksInfo={this.state.stacksInfo}

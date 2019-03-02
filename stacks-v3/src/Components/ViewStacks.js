@@ -42,20 +42,34 @@ const Head = styled.div`
 `
 
 const MainDate = styled.h3`
-  font-size: 1.25rem;
+  font-size: 1.063rem;
   color: #4E4E4E;
   margin: 0px;
   margin-left: 1rem;
   margin-right: auto;
-
 `
 
 const AddNew = styled.button`
   background: #FEBE00;
+  margin-right: 9px;
 `
 
 const Edit = styled.button`
-  background: none;
+  background: #F3F3F3;
+  margin-right: 9px;
+`
+
+const Reset = styled.button`
+  background: #F3F3F3;
+  position: absolute;
+  left: 10px;
+  bottom: 20px;
+`
+const NextDay = styled.button`
+  background: #F3F3F3;
+  position: absolute;
+  left: 100px;
+  bottom: 20px;
 `
 
 
@@ -65,7 +79,7 @@ class ViewStacks extends Component {
 
     const {stacks} = this.props.stacks;
 
-    let addMode = "+ Add";
+    let addMode = "Add";
     let editMode = "Edit";
     if (this.props.activeStates.addModeIsActive){addMode = "Cancel"}
     if (this.props.activeStates.editModeIsActive){editMode = "Cancel"}
@@ -101,6 +115,8 @@ class ViewStacks extends Component {
             />
           ))}
         </SortableContainer>
+        <Reset>Reset</Reset>
+        <NextDay>Next Day</NextDay>
     </>
     );
   }

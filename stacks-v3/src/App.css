@@ -3,74 +3,12 @@
   box-sizing: border-box;
 }
 
-.title{
-  top: 12px;
-  left: 15px;
-  position: relative;
-  font-size: 1.1rem;
+#root {
+  height: 100%;
 }
 
-
-/* HABIT VIEW */
-
-.habitsTopBar{
-  height: 65px;
-  width:100%;
-  position: relative;
-}
-button.add{
-  position:absolute;
-  right:16px;
-  top:5px;
-  height:35px; width: 35px;
-  font-size: 1.1rem;
-  letter-spacing: 0;
-  text-align: center;
-  color: #3D3D3D;
-  background-color: #fff;
-  border: 1px solid #979797;
-  transition: background-color .15s ease-in;
-}
-button.add:hover{
-  cursor:pointer;
-  background-color:#FFE888;
-}
-button.add::after{
-  content:"+";
-  position:absolute;
-  right: 11px;
-  top: 5px;
-}
-
-/* STACKS */
 .stack{
   padding: 0px 15px;
   overflow:hidden;
   transition: height .5s ease;
 }
-
-.visible{
-  /* height:300px; */
-}
-.hidden{
-  /* height:50px; */
-}
-.streakName {
-  display:inline-block;
-  font-family: SanFranciscoText-Medium;
-  font-size: 1.1rem;
-  color: #C5C5C5;
-  letter-spacing: 0;
-  margin-left: 12px;
-}
-
-
-
-/* ANIMATIONS */
-
-
-
-
-
-
-/* //fdsf */

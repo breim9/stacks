@@ -16,10 +16,15 @@ So I've had to wrap it in another freaking div and put click on that.
 **************/
 
 const Li = styled.li`
+& {
   height:60px;
-  margin-top: 25px;
-  margin-bottom: 25px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 `
 
 const Circle = styled.div`
@@ -78,24 +83,23 @@ const Cue = styled.div`
   font-family: Roboto;
   font-weight: 300;
   font-style: italic;
-  font-size: 1.125rem;
+  font-size: 0.938rem;
   color: #4E4E4E;
   letter-spacing: 0;
-  line-height: 30px;
+  margin-bottom: 5px;
 `
 
 const Action = styled.div`
   font-family: Roboto;
   font-weight: 500;
-  font-size: 1.4rem;
+  font-size: 0.938rem;
   color: #4E4E4E;
   letter-spacing: 0;
-  line-height: 30px;
 `;
 
 const DragHandle = sortableHandle(({className}) => <span className={className}>::</span>);
 const DragHandleStyled = styled(DragHandle)`
-  color: red;
+  color: white;
 `;
 
 
