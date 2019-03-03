@@ -24,16 +24,23 @@ const Li = styled.li`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
 }
 `
 
 const Circle = styled.div`
   display:inline-block;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
   user-select: none;
   margin: 20px 0px;
   height:1.625rem;
@@ -93,6 +100,12 @@ const Cue = styled.div`
   color: #4E4E4E;
   letter-spacing: 0;
   margin-bottom: 5px;
+  -webkit-touch-callout: none; /* iOS Safari */
+-webkit-user-select: none; /* Chrome/Safari/Opera */
+-khtml-user-select: none; /* Konqueror */
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* Internet Explorer/Edge */
+ user-select: none;
 `
 
 const Action = styled.div`
@@ -101,6 +114,12 @@ const Action = styled.div`
   font-size: 1.063em;
   color: #4E4E4E;
   letter-spacing: 0;
+  -webkit-touch-callout: none; /* iOS Safari */
+-webkit-user-select: none; /* Chrome/Safari/Opera */
+-khtml-user-select: none; /* Konqueror */
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* Internet Explorer/Edge */
+ user-select: none;
 `;
 
 const DragHandle = sortableHandle(({className}) => <span className={className}>::</span>);

@@ -89,6 +89,12 @@ const GlobalStyles = createGlobalStyle`
       font-size: 1rem;
       color: #3D3D3D;
       text-align: center;
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Chrome/Safari/Opera */
+      -khtml-user-select: none; /* Konqueror */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+       user-select: none;
   }
   button:focus{
     outline: none;
