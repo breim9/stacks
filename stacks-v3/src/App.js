@@ -89,6 +89,7 @@ const GlobalStyles = createGlobalStyle`
       font-size: 1rem;
       color: #3D3D3D;
       text-align: center;
+      transition: width .2s;
       -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Chrome/Safari/Opera */
       -khtml-user-select: none; /* Konqueror */
