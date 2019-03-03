@@ -174,6 +174,7 @@ const AddSection = styled.div`
   border-radius: 11px;
   justify-content: space-around;
   transition: height .25s ease;
+  margin-top: 10px;
   ${({addModeIsActive}) => {
       if (addModeIsActive){
         return `height: 55px;
