@@ -24,11 +24,17 @@ const Li = styled.li`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 `
 
 const Circle = styled.div`
   display:inline-block;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   margin: 20px 0px;
   height:1.625rem;
   width:1.625rem;
