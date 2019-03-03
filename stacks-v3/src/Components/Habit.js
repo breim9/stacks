@@ -30,6 +30,7 @@ const Li = styled.li`
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
+   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 `
 
@@ -101,11 +102,11 @@ const Cue = styled.div`
   letter-spacing: 0;
   margin-bottom: 5px;
   -webkit-touch-callout: none; /* iOS Safari */
--webkit-user-select: none; /* Chrome/Safari/Opera */
--khtml-user-select: none; /* Konqueror */
--moz-user-select: none; /* Firefox */
--ms-user-select: none; /* Internet Explorer/Edge */
- user-select: none;
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
 `
 
 const Action = styled.div`
@@ -115,11 +116,11 @@ const Action = styled.div`
   color: #4E4E4E;
   letter-spacing: 0;
   -webkit-touch-callout: none; /* iOS Safari */
--webkit-user-select: none; /* Chrome/Safari/Opera */
--khtml-user-select: none; /* Konqueror */
--moz-user-select: none; /* Firefox */
--ms-user-select: none; /* Internet Explorer/Edge */
- user-select: none;
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
 `;
 
 const DragHandle = sortableHandle(({className}) => <span className={className}>::</span>);

@@ -17,6 +17,12 @@ const StackName = styled.h3`
   padding-left: 1.25rem;
   color:#4E4E4E;
   margin-bottom: 1rem;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
 `
 
 const Toggle = styled.div`
@@ -141,6 +147,7 @@ const StackBody = styled.ul`
   padding-left: 0.625rem;
   margin-bottom: 0px;
   margin-top: 10px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 &:after {
   position: absolute;
