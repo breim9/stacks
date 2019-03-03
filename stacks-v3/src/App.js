@@ -79,14 +79,14 @@ const GlobalStyles = createGlobalStyle`
   button {
       padding: 0; border: none; font: inherit; color: inherit; background-color: transparent;
       border-radius: 6px;
-      height: 27px;
+      height: 30px;
       // width:85px;
-      padding-top: 3px;
+      padding-top: 4px;
       padding-left: 13px;
       padding-right: 13px;
       font-family: Poppins;
       font-weight: 500;
-      font-size: 0.938rem;
+      font-size: 1rem;
       color: #3D3D3D;
       text-align: center;
   }

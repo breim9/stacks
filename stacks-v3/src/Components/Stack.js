@@ -12,7 +12,7 @@ Stack Component
 **************/
 
 const StackName = styled.h3`
-  font-size: 1.063rem;
+  font-size: 1.125em;
   display: inline-block;
   padding-left: 1.25rem;
   color:#4E4E4E;

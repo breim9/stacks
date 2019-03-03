@@ -89,7 +89,7 @@ const Cue = styled.div`
   font-family: Roboto;
   font-weight: 300;
   font-style: italic;
-  font-size: 0.938rem;
+  font-size: 1.063em;
   color: #4E4E4E;
   letter-spacing: 0;
   margin-bottom: 5px;
@@ -98,7 +98,7 @@ const Cue = styled.div`
 const Action = styled.div`
   font-family: Roboto;
   font-weight: 500;
-  font-size: 0.938rem;
+  font-size: 1.063em;
   color: #4E4E4E;
   letter-spacing: 0;
 `;
