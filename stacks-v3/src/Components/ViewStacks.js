@@ -115,8 +115,8 @@ class ViewStacks extends Component {
             />
           ))}
         </SortableContainer>
-        <Reset>Reset</Reset>
-        <NextDay>Next Day</NextDay>
+        <Reset onClick={this.props.clearStorage}>Reset</Reset>
+        <NextDay onClick={this.props.nextDay}>Next Day</NextDay>
     </>
     );
   }
