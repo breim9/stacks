@@ -33,7 +33,6 @@ const Li = styled.li`
    -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 `
-
 const Circle = styled.div`
   display:inline-block;
   -webkit-touch-callout: none; /* iOS Safari */
@@ -81,7 +80,6 @@ const Circle = styled.div`
     }
   }}
 `
-
 const HabitText = styled.div`
   display: inline-block;
   margin-left: 20px;
@@ -92,7 +90,6 @@ const HabitOptions = styled.div`
   margin-left: 20px;
   vertical-align: top;
 `
-
 const Cue = styled.div`
   font-family: Roboto;
   font-weight: 300;
@@ -108,7 +105,6 @@ const Cue = styled.div`
   -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
 `
-
 const Action = styled.div`
   font-family: Roboto;
   font-weight: 500;
@@ -122,7 +118,6 @@ const Action = styled.div`
   -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
 `;
-
 const DragHandle = sortableHandle(({className}) => <span className={className}>::</span>);
 const DragHandleStyled = styled(DragHandle)`
   color: white;

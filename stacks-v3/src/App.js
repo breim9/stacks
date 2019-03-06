@@ -8,14 +8,12 @@ import styled, {createGlobalStyle} from 'styled-components';
 TO DO
 
 
-!- See if you can refactor state so stack info is in the same overall item as stacks.
-Maybe adding in an extra layer of array for sortable lib is all that is needed?
+!- Refactor stack info into stacks array with helper functions aware of draggablelist lib
 
 
-- Ability to Add a new stack
-- Ability to rearrange stacks
-- Add new habits
-- toggle animation
+- Ability to add a new stack
+- Ability to rearrange stacks (under info)
+- Add new habits (use formik)
 - stack bar color when all complete
 - Streak counter 'working'
 - 'Edit' button
@@ -110,7 +108,7 @@ class App extends Component {
 
   state = {
     stacks : [
-      [ //remove this extra array lol. But also that will break everything :'(
+      [ //remove this extra array. But also that will break the functions below :'(
         {
           action : "Meditate 15mins",
           cue: "7:00am",
@@ -121,7 +119,7 @@ class App extends Component {
           action:"Exercise",
           cue:"then",
           result: "neutral",
-          log : ["hi"],
+          log : [""],
         },
       ],
     ],
@@ -348,8 +346,6 @@ class App extends Component {
       this.updateLastLoggedDate(thisDay, thisMonth, thisYear, thisMin);
     }
   }
-
-
 
 
   render() {
