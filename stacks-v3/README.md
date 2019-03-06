@@ -1,4 +1,4 @@
-![Image of Stacks App](https://github.com/benreimer9/stacks/tree/master/stacks-img.png)
+![Image of Stacks App](https://github.com/benreimer9/stacks/blob/master/stacks-img.png)
 
 View a live version on [Netlify](https://stacks-v1.netlify.com/) or download and run the app locally with `npm start`.
 
