@@ -113,33 +113,33 @@ class App extends Component {
           action : "Meditate 15mins",
           cue: "7:00am",
           result: "neutral",
-          log : [""],
+          log : {},
         },
         {
           action:"Exercise",
           cue:"then",
           result: "neutral",
-          log : [""],
+          log : {},
         },
       ],
     ],
     stacksInfo : [
       { name : "Routine One", streak: 0, height : "auto", },
     ],
-    lastLoggedDate : null, // day/month/year
     date : {
-      today : null, // day/month/year
-      lastLoggedDay : null, // day/month/year
-      lastLoggedDay : null,
-      lastLoggedMonth : null,
-      lastLoggedYear : null,
-      dayOfHabit : 0,
+      lastLoggedDate : null, // day/month/year
+      visualDate : null,
     },
     activeStates : {
       addModeIsActive : false,
       addModuleIsActive : false,
       editModeIsActive : false,
     },
+    debug : {
+      debugMode : true,
+      addDay : false,
+      addCounter : 0,
+    }
   };
 
 
@@ -161,42 +161,39 @@ class App extends Component {
   habitEasyComplete = (itemId, stackId) => {
     //turn earlier habits in stack into 'complete' if they're neutral
 
-    const newStack = [...this.state.stacks];
-
-    newStack[stackId] = newStack[stackId].map( (habit, i) => {
-      if (itemId > i && habit.result === "neutral"){
-        habit.result = "complete";
-        habit.log[this.state.date.dayOfHabit] = "complete";
-        return;
+    let stack = [...this.state.stacks[stackId]];
+    for (var i = 0; i < stack.length; i++) {
+      if (itemId > i && stack[i].result === "neutral"){
+        this.logHabit(i, stackId)
       }
-      return false;
-    });
-
-    this.setState({oldStack : newStack})
+    }
   }
-  logHabit = (itemId, stackId) => {
 
-    const newStack = [...this.state.stacks];
-    const result = newStack[stackId][itemId].result; //neutral, complete, miss, etc.
-    const updatedResult = this.habitResultHandler(result); //toggle to next result
+  logHabit = (itemId, stackId) => {
+    console.log("logging habit : ", itemId);
+    let newStacks = [...this.state.stacks];
+    let habitToUpdate = newStacks[stackId][itemId];
+    let result = habitToUpdate.result; //neutral, complete, miss, etc.
+    let updatedResult = this.habitResultHandler(result); //toggle to next result
     let shouldUpdateStreakCounter = false;
 
     if (updatedResult === "complete"){
       this.habitEasyComplete(itemId, stackId);
     }
     //if last habit is logged with any result, update streakcounter
-    if (newStack[stackId][newStack[stackId].length-1].result !== null){
+    let lastHabitInStack = newStacks[stackId].length-1;
+    if (newStacks[stackId][lastHabitInStack].result !== null){
       shouldUpdateStreakCounter = true;
     }
 
-    newStack[stackId][itemId].result = updatedResult;
+    habitToUpdate.result = updatedResult;
 
-    //update habit log
-    const log = newStack[stackId][itemId].log;
-    log[this.state.date.dayOfHabit] = updatedResult;
-    newStack[stackId][itemId].log = log;
+    //add habit to the habit's log
+    let today = this.state.date.lastLoggedDate;
+    habitToUpdate.log[today] = updatedResult;
 
-    this.setState({stacks : newStack}, function stateUpdateComplete(){
+
+    this.setState({stacks : newStacks}, function stateUpdateComplete(){
       this.updateLocaLStorage();
       if (shouldUpdateStreakCounter) {
         this.updateStreakCounter(stackId)
@@ -303,55 +300,54 @@ class App extends Component {
   };
 
 
-
   //DAY-RELATED
 
   visualDate = (day, month) => {
     let today = null;
 
     switch (month) {
-      case '1' :
+      case '0' :
         today = "Jan " + day;
         break;
-      case '2' :
+      case '1' :
         today = "Feb " + day;
         break;
-      case '3' :
+      case '2' :
         today = "March " + day;
         break;
-      case '4' :
+      case '3' :
         today = "April " + day;
         break;
-      case '5' :
+      case '4' :
         today = "May " + day;
         break;
-      case '6' :
+      case '5' :
         today = "June " + day;
         break;
-      case '7' :
+      case '6' :
         today = "July " + day;
         break;
-      case '8' :
+      case '7' :
         today = "Aug " + day;
         break;
-      case '9' :
+      case '8' :
         today = "Sept " + day;
         break;
-      case '10' :
+      case '9' :
         today = "Oct " + day;
         break;
-      case '11' :
+      case '10' :
         today = "Nov " + day;
         break;
-      case '12' :
+      case '11' :
         today = "Dec " + day;
         break;
     }
-
     return today;
   }
   isNewDay = () => {
-    let lastLoggedDate = this.state.lastLoggedDate;
+    let date = {...this.state.date}
+    let lastLoggedDate = date.lastLoggedDate;
 
     //get the day
     let fullDate = new Date();
@@ -359,63 +355,52 @@ class App extends Component {
     let thisMonth = fullDate.getMonth().toString();
     let thisYear = fullDate.getFullYear().toString();
 
+    //Debug : force add a day for testing
+    if (this.state.debug.debugMode){
+
+      thisDay = fullDate.getDate() + this.state.debug.addCounter;
+      thisDay = thisDay.toString();
+
+      if (this.state.debug.addDay){
+        console.log("day is forced to : " + thisDay);
+        let debug = {...this.state.debug};
+        debug.addCounter++;
+        debug.addDay = false;
+        this.setState({debug : debug})
+        this.resetForNewDay();
+      }
+    }
+
 
     let currentDate = thisDay + "/" + thisMonth + "/" + thisYear;
+    let visDate = this.visualDate(thisDay, thisMonth);
+
 
     if (lastLoggedDate === currentDate){
-      console.log("-- same day");
       return false;
     }
     else {
-      console.log("-- new day");
-      this.setState({ lastLoggedDate : currentDate})
-      return true
-    }
-
-  }
-
-
-  //OLD
-  checkIsSameDay = (thisDay, thisMonth, thisYear) => {
-
-    if (this.state.date.lastLoggedDay === null){
-      //first day of using the app!
+      date.lastLoggedDate = currentDate;
+      date.visualDate = visDate;
+      this.setState({ date : date})
       return true;
     }
-    else if (thisDay !== this.state.date.lastLoggedDay){
-      if (thisMonth === this.state.date.lastLoggedMonth && thisYear === this.state.date.lastLoggedYear){
-        return false;
-      }
-    }
-    else if (thisDay === this.state.date.lastLoggedDay
-      && thisMonth === this.state.date.lastLoggedMonth
-      && thisYear === this.state.date.lastLoggedYear){
-      return true;
-    }
-  }
-  updateLastLoggedDate = (thisDay, thisMonth, thisYear) => {
 
-    let newDate = {...this.state.date};
-    newDate.thisDay = thisDay;
-    newDate.thisMonth= thisMonth;
-    newDate.thisYear = thisYear;
-    newDate.dayOfHabit = newDate.dayOfHabit + 1;
-
-    this.setState({date : newDate});
   }
   resetForNewDay = () => {
-
-    this.updateLocaLStorage();
-
-    let newDate = {...this.state.date};
-    newDate.dayOfHabit = newDate.dayOfHabit + 1;
 
     let stacks = [...this.state.stacks];
     stacks[0].map( habit => {
       habit.result = "neutral"
     })
 
-    this.setState({ date : newDate })
+    this.updateLocaLStorage();
+
+  }
+  forceNextDay = () => {
+    let debug = {...this.state.debug};
+    debug.addDay = true;
+    this.setState({debug : debug})
   }
 
 
@@ -451,9 +436,13 @@ class App extends Component {
 
   componentDidMount() {
 
-    this.populateStateFromStorage();
-    if (this.isNewDay) this.resetForNewDay();
     this.interval = setInterval(() => this.isNewDay(), 60000);
+
+    this.populateStateFromStorage();
+    if (this.isNewDay) {
+      this.resetForNewDay();
+    }
+
 
   }
 
@@ -468,7 +457,7 @@ class App extends Component {
     let context = this;
     setTimeout(function () {
       if (context.isNewDay()){
-        //do new day stuff 
+        //do new day stuff
         context.resetForNewDay();
       }
     }, 1000);
@@ -482,14 +471,14 @@ class App extends Component {
         <ViewStacks
           stacks={this.state}
           stacksInfo={this.state.stacksInfo}
-          day={this.state.date.dayOfHabit}
+          day={this.state.date.visualDate}
           toggleStack={this.toggleStack}
           logHabit={this.logHabit}
           onSortEnd={this.onSortEnd}
           addHabit={this.addHabit}
           toggleAddMode={this.toggleAddMode}
           activeStates={this.state.activeStates}
-          nextDay={this.resetForNewDay}
+          nextDay={this.forceNextDay}
           clearStorage={this.clearStorage}
         />
 

@@ -88,7 +88,7 @@ class ViewStacks extends Component {
       <>
         {/* <AddHabitModule activeStates={this.props.activeStates} /> */}
         <Head>
-          <MainDate>Day {this.props.day}</MainDate>
+          <MainDate>{this.props.day}</MainDate>
           <AddNew onClick={this.props.toggleAddMode}>
               {addMode}
           </AddNew>
