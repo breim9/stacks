@@ -124,7 +124,7 @@ class App extends Component {
       ],
     ],
     stacksInfo : [
-      { name : "Routine One", streak: 0, height : "auto", },
+      { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
     ],
     date : {
       lastLoggedDate : null, // day/month/year
@@ -170,7 +170,7 @@ class App extends Component {
   }
 
   logHabit = (itemId, stackId) => {
-    console.log("logging habit : ", itemId);
+
     let newStacks = [...this.state.stacks];
     let habitToUpdate = newStacks[stackId][itemId];
     let result = habitToUpdate.result; //neutral, complete, miss, etc.
@@ -218,52 +218,57 @@ class App extends Component {
         action : action,
         cue: cue,
         result: "neutral",
-        log : [],
+        log : {},
       }
     )
 
     this.setState({stacks : newStack})
     this.updateLocaLStorage();
   }
-
+  addStreak = () => {
+    //note: fixes need to happen in resetForNewDay as well, just uses [0] for reseting first stack
+  }
 
   //STREAKS
-
   updateStreakCounter = (stackId) => {
-    let newStackInfo = {...this.state.stacksInfo};
+    let stacksInfo = [...this.state.stacksInfo];
     let finalResult = null;
     let that = this;
+    let streakChange = stacksInfo[stackId].todayStreakChange;
     let stack = [...this.state.stacks[stackId]];
 
-    //give a few seconds for users to log any misses / neutrals / skips
-    //go thru habits to decide what finalResult should be
-    setTimeout(function () {
-      for (var i = 0; i < stack.length; i++) {
+    for (var i = 0; i < stack.length; i++) {
 
-        if (stack[i].result === "complete" && finalResult !== "failed" && finalResult !== "incomplete"){
-          finalResult = "completed";
-        }
-        else if(stack[i].result === "miss"){
-          finalResult = "failed";
-        }
-        else if (stack[i].result === "skip"){
-          finalResult = "completed";
-        }
-        else if (stack[i].result === "neutral"){
-          //catch any neutrals -- this means logging for the day isn't done yet
-          finalResult = "incomplete";
-        }
+      if (stack[i].result === "complete" && finalResult !== "failed" && finalResult !== "incomplete"){
+        finalResult = "completed";
       }
+      else if(stack[i].result === "miss"){
+        finalResult = "failed";
+      }
+      else if (stack[i].result === "skip"){
+        finalResult = "completed";
+      }
+      else if (stack[i].result === "neutral"){
+        //catch any neutrals -- this means logging for the day isn't done yet
+        finalResult = "incomplete";
+      }
+    }
 
-      if (finalResult === "failed"){
-        newStackInfo[stackId].streak--;
+    if (finalResult === "failed"){
+      if (streakChange !== -1){ //only remove 1 if it hasn't already today
+        stacksInfo[stackId].streak--;
+        streakChange = -1;
       }
-      if (finalResult === "completed"){
-        newStackInfo[stackId].streak++;
+    }
+    if (finalResult === "completed"){
+      if (streakChange !== 1){
+        stacksInfo[stackId].streak++;
+        streakChange = 1;
       }
+    }
 
-      that.setState({stacksInfo : newStackInfo})
-    }, 2000);
+    stacksInfo[stackId].todayStreakChange = streakChange;
+    that.setState({stacksInfo : stacksInfo})
 
 
   }
@@ -301,7 +306,6 @@ class App extends Component {
 
 
   //DAY-RELATED
-
   visualDate = (day, month) => {
     let today = null;
 
@@ -362,7 +366,7 @@ class App extends Component {
       thisDay = thisDay.toString();
 
       if (this.state.debug.addDay){
-        console.log("day is forced to : " + thisDay);
+        console.log("day is forced to next");
         let debug = {...this.state.debug};
         debug.addCounter++;
         debug.addDay = false;
@@ -392,6 +396,11 @@ class App extends Component {
     let stacks = [...this.state.stacks];
     stacks[0].map( habit => {
       habit.result = "neutral"
+    })
+
+    let stacksInfo = [...this.state.stacksInfo];
+    stacksInfo.map( stackInfo => {
+      stackInfo.todayStreakChange = 0;
     })
 
     this.updateLocaLStorage();
