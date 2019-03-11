@@ -108,7 +108,7 @@ class App extends Component {
 
   state = {
     stacks : [
-      [ //remove this extra array. But also that will break the functions below :'(
+      [ //stack 1
         {
           action : "Meditate 15mins",
           cue: "7:00am",
@@ -126,7 +126,10 @@ class App extends Component {
     stacksInfo : [
       { name : "Routine One", streak: 0, height : "auto", },
     ],
+    lastLoggedDate : null, // day/month/year
     date : {
+      today : null, // day/month/year
+      lastLoggedDay : null, // day/month/year
       lastLoggedDay : null,
       lastLoggedMonth : null,
       lastLoggedYear : null,
@@ -169,8 +172,6 @@ class App extends Component {
       return false;
     });
 
-    //add to habit log
-
     this.setState({oldStack : newStack})
   }
   logHabit = (itemId, stackId) => {
@@ -178,9 +179,14 @@ class App extends Component {
     const newStack = [...this.state.stacks];
     const result = newStack[stackId][itemId].result; //neutral, complete, miss, etc.
     const updatedResult = this.habitResultHandler(result); //toggle to next result
+    let shouldUpdateStreakCounter = false;
 
     if (updatedResult === "complete"){
       this.habitEasyComplete(itemId, stackId);
+    }
+    //if last habit is logged with any result, update streakcounter
+    if (newStack[stackId][newStack[stackId].length-1].result !== null){
+      shouldUpdateStreakCounter = true;
     }
 
     newStack[stackId][itemId].result = updatedResult;
@@ -190,8 +196,12 @@ class App extends Component {
     log[this.state.date.dayOfHabit] = updatedResult;
     newStack[stackId][itemId].log = log;
 
-    this.setState({stacks : newStack})
-    this.updateLocaLStorage();
+    this.setState({stacks : newStack}, function stateUpdateComplete(){
+      this.updateLocaLStorage();
+      if (shouldUpdateStreakCounter) {
+        this.updateStreakCounter(stackId)
+      };
+    })
 
   }
   addHabit = (stackId) => {
@@ -219,19 +229,47 @@ class App extends Component {
     this.updateLocaLStorage();
   }
 
-  //dragging habits in new order
-  onSortEnd = ({oldIndex, newIndex, collection}) => {
-    this.setState(({stacks}) => {
-      const newstacks = [...stacks];
 
-      newstacks[collection] = arrayMove(
-        stacks[collection],
-        oldIndex,
-        newIndex,
-      );
-      return {stacks: newstacks};
-    });
-  };
+  //STREAKS
+
+  updateStreakCounter = (stackId) => {
+    let newStackInfo = {...this.state.stacksInfo};
+    let finalResult = null;
+    let that = this;
+    let stack = [...this.state.stacks[stackId]];
+
+    //give a few seconds for users to log any misses / neutrals / skips
+    //go thru habits to decide what finalResult should be
+    setTimeout(function () {
+      for (var i = 0; i < stack.length; i++) {
+
+        if (stack[i].result === "complete" && finalResult !== "failed" && finalResult !== "incomplete"){
+          finalResult = "completed";
+        }
+        else if(stack[i].result === "miss"){
+          finalResult = "failed";
+        }
+        else if (stack[i].result === "skip"){
+          finalResult = "completed";
+        }
+        else if (stack[i].result === "neutral"){
+          //catch any neutrals -- this means logging for the day isn't done yet
+          finalResult = "incomplete";
+        }
+      }
+
+      if (finalResult === "failed"){
+        newStackInfo[stackId].streak--;
+      }
+      if (finalResult === "completed"){
+        newStackInfo[stackId].streak++;
+      }
+
+      that.setState({stacksInfo : newStackInfo})
+    }, 2000);
+
+
+  }
 
 
   //OTHER
@@ -251,9 +289,93 @@ class App extends Component {
     newActiveState.addModeIsActive = !activeState.addModeIsActive;
     this.setState({ activeState : newActiveState})
   }
+  onSortEnd = ({oldIndex, newIndex, collection}) => {
+    this.setState(({stacks}) => {
+      const newstacks = [...stacks];
+
+      newstacks[collection] = arrayMove(
+        stacks[collection],
+        oldIndex,
+        newIndex,
+      );
+      return {stacks: newstacks};
+    });
+  };
+
 
 
   //DAY-RELATED
+
+  visualDate = (day, month) => {
+    let today = null;
+
+    switch (month) {
+      case '1' :
+        today = "Jan " + day;
+        break;
+      case '2' :
+        today = "Feb " + day;
+        break;
+      case '3' :
+        today = "March " + day;
+        break;
+      case '4' :
+        today = "April " + day;
+        break;
+      case '5' :
+        today = "May " + day;
+        break;
+      case '6' :
+        today = "June " + day;
+        break;
+      case '7' :
+        today = "July " + day;
+        break;
+      case '8' :
+        today = "Aug " + day;
+        break;
+      case '9' :
+        today = "Sept " + day;
+        break;
+      case '10' :
+        today = "Oct " + day;
+        break;
+      case '11' :
+        today = "Nov " + day;
+        break;
+      case '12' :
+        today = "Dec " + day;
+        break;
+    }
+
+    return today;
+  }
+  isNewDay = () => {
+    let lastLoggedDate = this.state.lastLoggedDate;
+
+    //get the day
+    let fullDate = new Date();
+    let thisDay = fullDate.getDate().toString();
+    let thisMonth = fullDate.getMonth().toString();
+    let thisYear = fullDate.getFullYear().toString();
+
+
+    let currentDate = thisDay + "/" + thisMonth + "/" + thisYear;
+
+    if (lastLoggedDate === currentDate){
+      console.log("-- same day");
+      return false;
+    }
+    else {
+      console.log("-- new day");
+      this.setState({ lastLoggedDate : currentDate})
+      return true
+    }
+
+  }
+
+
+  //OLD
   checkIsSameDay = (thisDay, thisMonth, thisYear) => {
 
     if (this.state.date.lastLoggedDay === null){
@@ -282,6 +404,8 @@ class App extends Component {
     this.setState({date : newDate});
   }
   resetForNewDay = () => {
+
+    this.updateLocaLStorage();
 
     let newDate = {...this.state.date};
     newDate.dayOfHabit = newDate.dayOfHabit + 1;
@@ -327,29 +451,27 @@ class App extends Component {
 
   componentDidMount() {
 
-
-    //populate storedHabit in state from localStorage from previous sessions
     this.populateStateFromStorage();
+    if (this.isNewDay) this.resetForNewDay();
+    this.interval = setInterval(() => this.isNewDay(), 60000);
 
+  }
 
-    //get the day
-    let fullDate = new Date();
-    let thisDay = fullDate.getDate();
-    let thisMonth = fullDate.getMonth();
-    let thisYear = fullDate.getYear();
-
-    let isSameDay = this.checkIsSameDay(thisDay, thisMonth, thisYear);
-
-    if (!isSameDay){
-      this.updateLocaLStorage();
-      this.resetForNewDay();
-      this.updateLastLoggedDate(thisDay, thisMonth, thisYear);
-    }
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
 
   render() {
 
+    //check every minute if it's the same day
+    let context = this;
+    setTimeout(function () {
+      if (context.isNewDay()){
+        //do new day stuff 
+        context.resetForNewDay();
+      }
+    }, 1000);
 
     return (
       <AppStyled>
