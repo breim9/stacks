@@ -3,6 +3,7 @@ import Stack from './Stack';
 import styled from 'styled-components';
 import '../App.css';
 import {sortableContainer} from 'react-sortable-hoc';
+import AddHabitModule from './AddHabitModule';
 
 
 /**************
@@ -86,7 +87,11 @@ class ViewStacks extends Component {
 
     return (
       <>
-        {/* <AddHabitModule activeStates={this.props.activeStates} /> */}
+        <AddHabitModule
+            activeStates={this.props.activeStates}
+            cancelHabitModule={this.props.cancelHabitModule}
+            addHabitFormSubmission={this.props.addHabitFormSubmission}
+        />
         <Head>
           <MainDate>{this.props.day}</MainDate>
           <AddNew onClick={this.props.toggleAddMode}>

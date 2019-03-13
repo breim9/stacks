@@ -4,11 +4,11 @@ import ViewStacks from './Components/ViewStacks';
 import {arrayMove} from 'react-sortable-hoc';
 import styled, {createGlobalStyle} from 'styled-components';
 
+
 /**************
 TO DO
 
-
-!- Refactor stack info into stacks array with helper functions aware of draggablelist lib
+- Refactor stack info into stacks array with helper functions aware of draggablelist lib
 - Streak counter into localStorage
 - Ability to add a new stack
 - Add new habits (use formik)
@@ -72,6 +72,7 @@ const GlobalStyles = createGlobalStyle`
     background: transparent;  /* optional: just make scrollbar invisible */
   }
   button {
+      display: block;
       padding: 0; border: none; font: inherit; color: inherit; background-color: transparent;
       border-radius: 6px;
       height: 30px;
@@ -128,9 +129,12 @@ class App extends Component {
       visualDate : null,
     },
     activeStates : {
-      addModeIsActive : false,
-      addModuleIsActive : false,
+      addModeIsActive : true,
+      addModuleIsActive : true,
       editModeIsActive : false,
+    },
+    building : {
+      stackBeingAddedTo : 0, //defaults to first stack
     },
     debug : {
       debugMode : true,
@@ -200,16 +204,23 @@ class App extends Component {
   }
   addHabit = (stackId) => {
 
-    const newStack = [...this.state.stacks]
+    const activeStates = {...this.state.activeStates};
+    const building = {...this.state.building};
 
-    const activeStates = this.state.activeStates;
-    const newActiveStates = activeStates;
+    activeStates.addModuleIsActive = true;
+    building.stackBeingAddedTo = stackId;
 
-    newActiveStates.addModuleIsActive = true;
-    this.setState({ activeStates : newActiveStates })
+    this.setState({ activeStates : activeStates });
+    this.setState({ building : building });
+  }
+  addHabitFormSubmission = (newHabit) => {
 
-    let cue = prompt("Cue : ");
-    let action = prompt("Action : ");
+    let stackId = this.state.building.stackBeingAddedTo;
+    let newStack = [...this.state.stacks];
+
+    let action = newHabit.action;
+    let cue = newHabit.cue;
+
     newStack[stackId].push(
       {
         action : action,
@@ -219,8 +230,14 @@ class App extends Component {
       }
     )
 
+    const building = {...this.state.building};
+    building.stackBeingAddedTo = 0; //defaults to first stack
+    this.setState({building : building });
     this.setState({stacks : newStack})
     this.updateLocaLStorage();
+
+    this.cancelHabitModule();
+    this.toggleAddMode();
   }
   addStreak = () => {
     //note: fixes need to happen in resetForNewDay as well, just uses [0] for reseting first stack
@@ -284,9 +301,13 @@ class App extends Component {
   }
   toggleAddMode = () => {
     const activeState = this.state.activeStates;
-    const newActiveState = activeState;
-    newActiveState.addModeIsActive = !activeState.addModeIsActive;
-    this.setState({ activeState : newActiveState})
+    activeState.addModeIsActive = !activeState.addModeIsActive;
+    this.setState({ activeState : activeState})
+  }
+  cancelHabitModule = () => {
+    let activeStates = {...this.state.activeStates};
+    activeStates.addModuleIsActive = false;
+    this.setState({activeStates : activeStates});
   }
   onSortEnd = ({oldIndex, newIndex, collection}) => {
     this.setState(({stacks}) => {
@@ -300,7 +321,6 @@ class App extends Component {
       return {stacks: newstacks};
     });
   };
-
 
   //DAY-RELATED
   visualDate = (day, month) => {
@@ -483,9 +503,11 @@ class App extends Component {
           onSortEnd={this.onSortEnd}
           addHabit={this.addHabit}
           toggleAddMode={this.toggleAddMode}
+          cancelHabitModule={this.cancelHabitModule}
           activeStates={this.state.activeStates}
           nextDay={this.forceNextDay}
           clearStorage={this.clearStorage}
+          addHabitFormSubmission={this.addHabitFormSubmission}
         />
 
       </AppStyled>
