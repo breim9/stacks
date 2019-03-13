@@ -74,7 +74,7 @@ const GlobalStyles = createGlobalStyle`
   button {
       display: block;
       padding: 0; border: none; font: inherit; color: inherit; background-color: transparent;
-      border-radius: 6px;
+      border-radius: 4px;
       height: 30px;
       // width:85px;
       padding-top: 4px;
@@ -483,7 +483,6 @@ class App extends Component {
     let context = this;
     setTimeout(function () {
       if (context.isNewDay()){
-        //do new day stuff
         context.resetForNewDay();
       }
     }, 1000);

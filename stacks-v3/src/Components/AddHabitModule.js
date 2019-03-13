@@ -76,6 +76,26 @@ const Label = styled.label`
   font-size: 1em;
 `;
 
+const Submit = styled.input`
+  display: block;
+  padding: 0; border: none; font: inherit; color: inherit; background-color: transparent;
+  border-radius: 4px;
+  height: 30px;
+  padding-top: 4px;
+  padding-left: 13px;
+  padding-right: 13px;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #3D3D3D;
+  text-align: center;
+  transition: width .2s;
+  background: #FEBE00;
+  position:relative;
+  margin-right: 10px;
+  margin-left: auto;
+`
+
 const Relative = {
   position:'relative'
 }
@@ -105,11 +125,10 @@ function AddHabitModule(props){
         // Handles our submission
 
         onSubmit={(values, { setSubmitting }) => {
-          // This is where you could wire up axios or superagent
-          console.log("Submitted Values:", values);
+          // send off the values!
           props.addHabitFormSubmission(values);
           // Simulates the delay of a real request
-          setTimeout(() => setSubmitting(false), 3 * 1000);
+          // setTimeout(() => setSubmitting(false), 3 * 1000);
         }}
       >
         {props => (
@@ -152,7 +171,7 @@ function AddHabitModule(props){
               )}
               <FocusBorder />
             </InputWrapper>
-            <input
+            <Submit
               type="submit"
               value="Submit"
               disabled={props.isSubmitting}
