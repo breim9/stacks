@@ -60,7 +60,7 @@ const FocusBorder = styled.span`
   left: 50%;
   width: 0px;
   height: 2px;
-  background-color: #979797;
+  background-color: #D3D3D3;
   transition: 0.4s;
 
   input:focus ~ & {

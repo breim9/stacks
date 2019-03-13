@@ -17,7 +17,10 @@ Components
 
 - Refactor stack info into stacks array with helper functions aware of draggablelist lib
 - 'Edit' button
+- learn when to clear localStorage cache (might fix below problem)
 - figure out why app sometimes goes white until memory cleared
+- make the android PWA download pop-up work
+
 
 - remove unneeded fonts when style is done
 
