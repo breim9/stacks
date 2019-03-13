@@ -9,15 +9,12 @@ TO DO
 
 
 !- Refactor stack info into stacks array with helper functions aware of draggablelist lib
-
-- How will dayOfHabit handle habits starting on way later dates? lots of null array items?
+- Streak counter into localStorage
 - Ability to add a new stack
-- Ability to rearrange stacks (under info)
 - Add new habits (use formik)
 - stack bar color when all complete
-- Streak counter 'working'
 - 'Edit' button
-
+- figure out why app sometimes goes white until memory cleared
 
 - remove unneeded fonts when style is done
 
