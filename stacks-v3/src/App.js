@@ -8,11 +8,14 @@ import styled, {createGlobalStyle} from 'styled-components';
 /**************
 TO DO
 
-- Refactor stack info into stacks array with helper functions aware of draggablelist lib
-- Streak counter into localStorage
+
+Components
 - Ability to add a new stack
-- Add new habits (use formik)
 - stack bar color when all complete
+- Add days of the week to habits
+- Learn push messaging and add reminders to habits (or reminders to your stack)
+
+- Refactor stack info into stacks array with helper functions aware of draggablelist lib
 - 'Edit' button
 - figure out why app sometimes goes white until memory cleared
 

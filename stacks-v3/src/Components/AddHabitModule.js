@@ -78,6 +78,13 @@ const Label = styled.label`
 
 const Submit = styled.input`
   display: block;
+  -webkit-appearance: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
   padding: 0; border: none; font: inherit; color: inherit; background-color: transparent;
   border-radius: 4px;
   height: 30px;
@@ -94,6 +101,7 @@ const Submit = styled.input`
   position:relative;
   margin-right: 10px;
   margin-left: auto;
+
 `
 
 const Relative = {
