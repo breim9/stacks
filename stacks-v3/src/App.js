@@ -129,8 +129,8 @@ class App extends Component {
       visualDate : null,
     },
     activeStates : {
-      addModeIsActive : true,
-      addModuleIsActive : true,
+      addModeIsActive : false,
+      addModuleIsActive : false,
       editModeIsActive : false,
     },
     building : {
