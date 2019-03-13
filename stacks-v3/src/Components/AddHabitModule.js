@@ -59,7 +59,7 @@ const FocusBorder = styled.span`
   bottom: 0;
   left: 50%;
   width: 0px;
-  height: 1px;
+  height: 2px;
   background-color: #979797;
   transition: 0.4s;
 
