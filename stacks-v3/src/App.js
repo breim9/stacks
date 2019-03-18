@@ -41,7 +41,6 @@ to add a loader to webpack
 
 const AppStyled = styled.div`
   position:relative;
-  overflow:hidden;
   width:100%;
   height: 100%;
   max-width: 500px;
@@ -128,8 +127,38 @@ class App extends Component {
           log : {},
         },
       ],
+      [ //stack 1
+        {
+          action : "Meditate 15mins",
+          cue: "7:00am",
+          result: "neutral",
+          log : {},
+        },
+        {
+          action:"Exercise",
+          cue:"then",
+          result: "neutral",
+          log : {},
+        },
+      ],
+      [ //stack 1
+        {
+          action : "Meditate 15mins",
+          cue: "7:00am",
+          result: "neutral",
+          log : {},
+        },
+        {
+          action:"Exercise",
+          cue:"then",
+          result: "neutral",
+          log : {},
+        },
+      ],
     ],
     stacksInfo : [
+      { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
+      { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
       { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
     ],
     date : {

@@ -56,16 +56,16 @@ const Edit = styled.button`
   margin-right: 9px;
 `
 const Reset = styled.button`
-  background: #F3F3F3;
+  background: #FaFaFa;
   position: absolute;
-  left: 10px;
-  bottom: 20px;
+  right: 10px;
+  bottom: 10px;
 `
 const NextDay = styled.button`
-  background: #F3F3F3;
+  background: #FaFaFa;
   position: absolute;
-  left: 100px;
-  bottom: 20px;
+  right: 100px;
+  bottom: 10px;
 `
 const AddSection = styled.div`
   display: flex;
@@ -102,6 +102,13 @@ const AddButton = styled.div`
 `
 const AddStackSection = styled(AddSection)`
   margin-left: calc(0.625rem + 15px);
+`
+const DebugContainer = styled.div`
+  position:fixed;
+  bottom:0px;
+  width:100%;
+  height:50px;
+  background-color: #efefef;
 `
 
 
@@ -163,8 +170,12 @@ class ViewStacks extends Component {
             <AddButton onClick={() => this.props.addStack(this.props.stacksIndex)}> + Stack </AddButton>
           </AddStackSection>
         </SortableContainer>
-        <Reset onClick={this.props.clearStorage}>Reset</Reset>
-        <NextDay onClick={this.props.nextDay}>Next Day</NextDay>
+        <DebugContainer>
+          <p style={{color : '#aaa', marginLeft : '5px'}}>Debug Controls</p>
+          <Reset onClick={this.props.clearStorage}>Reset</Reset>
+          <NextDay onClick={this.props.nextDay}>Next Day</NextDay>
+        </DebugContainer>
+
     </>
     );
   }
