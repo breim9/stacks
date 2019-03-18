@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Formik, Field, Form } from 'formik';
 
-//Formik form taken right from https://alligator.io/react/forms-with-react-and-formik/ and modified
 
 const Module = styled.div`
   position:absolute;
@@ -31,6 +30,7 @@ const FormStyled = styled(Form)`
   margin: 0 auto;
   padding-top: 40px;
 `
+
 const InputWrapper = styled.div`
   position:relative;
   padding-left: 20px;
@@ -114,10 +114,9 @@ function AddHabitModule(props){
     <Module active={props.activeStates.addModuleIsActive}>
       <Cancel onClick={props.cancelHabitModule}> Cancel </Cancel>
       <Formik
-        // Sets up our default values
+
         initialValues={{ cue: "", action: "" }}
 
-        // Validates our data
         validate={values => {
           const errors = {};
           // if (values.cue.length < 1) {
@@ -129,13 +128,11 @@ function AddHabitModule(props){
           return errors;
         }}
 
-        // Handles our submission
+
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          // send off the values!
+
           props.addHabitFormSubmission(values);
           resetForm();
-          // Simulates the delay of a real request
-          // setTimeout(() => setSubmitting(false), 3 * 1000);
         }}
       >
         {props => (
@@ -188,7 +185,6 @@ function AddHabitModule(props){
               type="reset"
               value="Reset"
               onClick={props.handleReset}
-              // disabled={!props.dirty || props.isSubmitting}
               disabled={!props.dirty}
             />
           </FormStyled>
