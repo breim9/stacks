@@ -19,6 +19,8 @@ Components
 - 'Edit' button
 - learn when to clear localStorage cache (might fix below problem)
 - figure out why app sometimes goes white until memory cleared
+* stacks had 567kb of website data and went white screen... worked when cleared.
+* that seems like way too little to be a memory leak. Maybe a bug that can happen over time?
 - make the android PWA download pop-up work
 
 

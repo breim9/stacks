@@ -108,6 +108,7 @@ const Relative = {
   position:'relative'
 }
 
+
 function AddHabitModule(props){
   return (
     <Module active={props.activeStates.addModuleIsActive}>
@@ -119,22 +120,20 @@ function AddHabitModule(props){
         // Validates our data
         validate={values => {
           const errors = {};
-
           // if (values.cue.length < 1) {
           //   errors.cue = "Cue must not be empty";
           // }
           // if (values.action.length < 1) {
           //   errors.cue = "Action must not be empty";
           // }
-
           return errors;
         }}
 
         // Handles our submission
-
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           // send off the values!
           props.addHabitFormSubmission(values);
+          resetForm();
           // Simulates the delay of a real request
           // setTimeout(() => setSubmitting(false), 3 * 1000);
         }}
@@ -184,12 +183,13 @@ function AddHabitModule(props){
               value="Submit"
               disabled={props.isSubmitting}
             />
-            &nbsp;
+
             <input
               type="reset"
               value="Reset"
               onClick={props.handleReset}
-              disabled={!props.dirty || props.isSubmitting}
+              // disabled={!props.dirty || props.isSubmitting}
+              disabled={!props.dirty}
             />
           </FormStyled>
         )}
