@@ -109,21 +109,18 @@ const Relative = {
 }
 
 
-function AddHabitModule(props){
+function AddStackModule(props){
   return (
-    <Module active={props.activeStates.addHabitModuleIsActive}>
+    <Module active={props.activeStates.addStackModuleIsActive}>
       <Cancel onClick={props.cancelActiveModules}> Cancel </Cancel>
       <Formik
 
-        initialValues={{ cue: "", action: "" }}
+        initialValues={{ stackName: ""}}
 
         validate={values => {
           const errors = {};
-          // if (values.cue.length < 1) {
-          //   errors.cue = "Cue must not be empty";
-          // }
-          // if (values.action.length < 1) {
-          //   errors.cue = "Action must not be empty";
+          // if (values.stackName.length < 1) {
+          //   errors.stackName = "Name must not be empty";
           // }
           return errors;
         }}
@@ -131,49 +128,30 @@ function AddHabitModule(props){
 
         onSubmit={(values, { setSubmitting, resetForm }) => {
 
-          props.addHabitFormSubmission(values);
+          props.addStackFormSubmission(values);
           resetForm();
         }}
       >
         {props => (
           <FormStyled>
-            <Label htmlFor="cue">Cue</Label>
+            <Label htmlFor="stack">Name of Stack</Label>
             <InputWrapper>
               <Input
-                name="cue"
+                name="stackName"
                 type="text"
-                placeholder="ie. At 7:00am"
-                value={props.values.cue}
+                placeholder="Morning Routine"
+                value={props.values.stackName}
                 onChange={props.handleChange}
                 onBlur={props.handleBlur}
                 style={{
                   borderColor:
-                    props.errors.cue && props.touched.cue && "red"
+                    props.errors.stackName && props.touched.stackName && "red"
                 }}
               />
               <FocusBorder />
               {props.errors.cue && props.touched.cue && (
                 <div style={{ color: "red" }}>{props.errors.cue}</div>
               )}
-            </InputWrapper>
-            <Label htmlFor="action">Action</Label>
-            <InputWrapper>
-              <Input
-                name="action"
-                type="text"
-                placeholder="ie. Read for 10mins"
-                value={props.values.action}
-                onChange={props.handleChange}
-                onBlur={props.handleBlur}
-                style={{
-                  borderColor:
-                    props.errors.action && props.touched.action && "red"
-                }}
-              />
-              {props.errors.action && props.touched.action && (
-                <div style={{ color: "red" }}>{props.errors.action}</div>
-              )}
-              <FocusBorder />
             </InputWrapper>
             <Submit
               type="submit"
@@ -196,4 +174,4 @@ function AddHabitModule(props){
 }
 
 
-export default AddHabitModule;
+export default AddStackModule;

@@ -24,7 +24,6 @@ const StackName = styled.h3`
   -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
 `
-
 const Toggle = styled.div`
   display: inline-block;
   vertical-align: middle;
@@ -39,7 +38,6 @@ const Toggle = styled.div`
   justify-content: center;
   align-items: center;
 `
-
 const Burger = styled.div`
   & {
     width: 100%;
@@ -70,45 +68,6 @@ const Burger = styled.div`
     }}
   }
 `
-
-// &:before {
-//   ${( height ) => {
-//     if (height.open !== 0){
-//       return ( `transform: translateY(14px) rotate(135deg);`)
-//     }
-//     else {
-//       return ( `transform: translateY(14px) rotate(-135deg);`)
-//     }
-//   }}
-// }
-// &:after {
-//   ${( height ) => {
-//     if (height.open !== 0){
-//       return ( `transform: translateY(-14px) rotate(-135deg);`)
-//     }
-//     else {
-//       return ( `transform: translateY(-14px) rotate(135deg);`)
-//     }
-//   }}
-// }
-
-// const BurgerInnerDiv = styled.div`
-//   & {
-//     background-color: #000;
-//     border-radius: 3px;
-//     content: "";
-//     display: block;
-//     height: 0.2rem;
-//     margin: 5px 0;
-//     transition: all 0.2s ease-in-out;
-//     ${( height ) => {
-//       if (height.open !== 0){
-//         return ( `transform: scale(0);`)
-//       }
-//     }}
-//   }
-// `
-
 const StackBottom = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -125,7 +84,6 @@ const StackLine = styled.div`
   margin-bottom: -8px;
   background-color: #E9E9E9;
 `
-
 const StreakCount = styled.div`
   display:inline-flex;
   justify-content:center;
@@ -140,7 +98,6 @@ const StreakCount = styled.div`
   font-size: 0.938rem;
   color: #656464;
 `
-
 const StackBody = styled.ul`
 & {
   position:relative;
@@ -161,9 +118,6 @@ const StackBody = styled.ul`
   z-index: -1;
 }
 `
-
-
-
 const AddSection = styled.div`
   display: flex;
   align-items: center;
@@ -174,7 +128,7 @@ const AddSection = styled.div`
   border-radius: 11px;
   justify-content: space-around;
   transition: height .25s ease;
-  margin-top: 10px;
+
   ${({addModeIsActive}) => {
       if (addModeIsActive){
         return `height: 55px;
@@ -187,7 +141,6 @@ const AddSection = styled.div`
       }
   }}
 `
-
 const AddButton = styled.div`
   width:100%;
   height:100%;
@@ -198,11 +151,15 @@ const AddButton = styled.div`
   font-weight: 500;
   color:#FEBE00;
 `
+const AddStackSection = styled(AddSection)`
+  margin-left:0.625rem;
+`
+
 
 function Stack(props){
 
   return (
-
+    <>
     <div className="stack" key={props.stacksIndex}>
       <div className="stackHeader">
         <Toggle onClick={() => props.toggleStack(props.stacksIndex)}>
@@ -240,6 +197,7 @@ function Stack(props){
       </StackBottom>
     </div>
 
+    </>
   )
 }
 

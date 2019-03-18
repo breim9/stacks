@@ -138,7 +138,8 @@ class App extends Component {
     },
     activeStates : {
       addModeIsActive : false,
-      addModuleIsActive : false,
+      addHabitModuleIsActive : false,
+      addStackModuleIsActive : false,
       editModeIsActive : false,
     },
     building : {
@@ -152,7 +153,7 @@ class App extends Component {
   };
 
 
-  //HABITS
+  //HABITS AND STACKS
   habitResultHandler = (result) => {
     switch (result){
       case "neutral" :
@@ -178,6 +179,11 @@ class App extends Component {
     }
   }
 
+  /*
+  when a habit is tapped it logHabit()
+  addHabit opens the addHabitModule and begins the process
+  while AddHabitFormSubmission comples the process.
+  */
   logHabit = (itemId, stackId) => {
 
     let newStacks = [...this.state.stacks];
@@ -215,7 +221,18 @@ class App extends Component {
     const activeStates = {...this.state.activeStates};
     const building = {...this.state.building};
 
-    activeStates.addModuleIsActive = true;
+    activeStates.addHabitModuleIsActive = true;
+    building.stackBeingAddedTo = stackId;
+
+    this.setState({ activeStates : activeStates });
+    this.setState({ building : building });
+  }
+  addStack = (stackId) => {
+
+    const activeStates = {...this.state.activeStates};
+    const building = {...this.state.building};
+
+    activeStates.addStackModuleIsActive = true;
     building.stackBeingAddedTo = stackId;
 
     this.setState({ activeStates : activeStates });
@@ -244,11 +261,24 @@ class App extends Component {
     this.setState({stacks : newStack})
     this.updateLocaLStorage();
 
-    this.cancelHabitModule();
+    this.cancelActiveModules();
     this.toggleAddMode();
   }
-  addStreak = () => {
-    //note: fixes need to happen in resetForNewDay as well, just uses [0] for reseting first stack
+  addStackFormSubmission = (newStack) => {
+
+    let stacks = [...this.state.stacks];
+    let stacksInfo = [...this.state.stacksInfo];
+    stacks.push([]);
+    stacksInfo.push(
+      { name : newStack.stackName, streak: 0, todayStreakChange:0, height : "auto", },
+    )
+
+    this.setState({stacksInfo : stacksInfo});
+    this.setState({stacks : stacks});
+
+    this.updateLocaLStorage();
+    this.cancelActiveModules();
+    this.toggleAddMode();
   }
 
   //STREAKS
@@ -312,11 +342,14 @@ class App extends Component {
     activeState.addModeIsActive = !activeState.addModeIsActive;
     this.setState({ activeState : activeState})
   }
-  cancelHabitModule = () => {
+  cancelActiveModules = () => {
     let activeStates = {...this.state.activeStates};
-    activeStates.addModuleIsActive = false;
+    activeStates.addHabitModuleIsActive = false;
+    activeStates.addStackModuleIsActive = false;
     this.setState({activeStates : activeStates});
   }
+
+
   onSortEnd = ({oldIndex, newIndex, collection}) => {
     this.setState(({stacks}) => {
       const newstacks = [...stacks];
@@ -419,14 +452,16 @@ class App extends Component {
   resetForNewDay = () => {
 
     let stacks = [...this.state.stacks];
-    stacks[0].map( habit => {
-      habit.result = "neutral"
-    })
+    stacks.map( (stack, index) => {
+      stacks[index].map( habit => {
+        habit.result = "neutral"
+      })
+    });
 
     let stacksInfo = [...this.state.stacksInfo];
     stacksInfo.map( stackInfo => {
       stackInfo.todayStreakChange = 0;
-    })
+    });
 
     this.updateLocaLStorage();
 
@@ -462,10 +497,12 @@ class App extends Component {
 
     //return habit circles to neutral for new day
     let stacks = [...this.state.stacks];
-    stacks[0].map( habit => {
-      habit.result = "neutral"
-    })
 
+    stacks.map( (stack, index) => {
+      stacks[index].map( habit => {
+        habit.result = "neutral"
+      })
+    })
   }
 
   componentDidMount() {
@@ -509,12 +546,14 @@ class App extends Component {
           logHabit={this.logHabit}
           onSortEnd={this.onSortEnd}
           addHabit={this.addHabit}
+          addStack={this.addStack}
           toggleAddMode={this.toggleAddMode}
-          cancelHabitModule={this.cancelHabitModule}
+          cancelActiveModules={this.cancelActiveModules}
           activeStates={this.state.activeStates}
           nextDay={this.forceNextDay}
           clearStorage={this.clearStorage}
           addHabitFormSubmission={this.addHabitFormSubmission}
+          addStackFormSubmission={this.addStackFormSubmission}
         />
 
       </AppStyled>
