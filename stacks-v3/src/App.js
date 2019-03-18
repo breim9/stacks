@@ -113,53 +113,17 @@ class App extends Component {
 
   state = {
     stacks : [
-      [ //stack 1
+      /*[ //stack 1
         {
           action : "Meditate 15mins",
           cue: "7:00am",
           result: "neutral",
           log : {},
         },
-        {
-          action:"Exercise",
-          cue:"then",
-          result: "neutral",
-          log : {},
-        },
-      ],
-      [ //stack 1
-        {
-          action : "Meditate 15mins",
-          cue: "7:00am",
-          result: "neutral",
-          log : {},
-        },
-        {
-          action:"Exercise",
-          cue:"then",
-          result: "neutral",
-          log : {},
-        },
-      ],
-      [ //stack 1
-        {
-          action : "Meditate 15mins",
-          cue: "7:00am",
-          result: "neutral",
-          log : {},
-        },
-        {
-          action:"Exercise",
-          cue:"then",
-          result: "neutral",
-          log : {},
-        },
-      ],
+      ],*/
     ],
     stacksInfo : [
-      { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
-      { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
-      { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
+      // { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
     ],
     date : {
       lastLoggedDate : null, // day/month/year

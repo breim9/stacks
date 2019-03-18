@@ -110,6 +110,21 @@ const DebugContainer = styled.div`
   height:50px;
   background-color: #efefef;
 `
+const EmptyStack = styled.div`
+  background-color: #F3F3F3;
+  height: 55px;
+  width:85%;
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color : #C5C5C5;
+  border-radius:11px;
+`
 
 
 
@@ -124,6 +139,33 @@ class ViewStacks extends Component {
     let editMode = "Edit";
     if (this.props.activeStates.addModeIsActive){addMode = "Cancel"}
     if (this.props.activeStates.editModeIsActive){editMode = "Cancel"}
+
+    let stacksContent = null;
+
+    if (stacks[0]){ //if stacks isn't empty
+      stacksContent = (
+        stacks.map((items, index) => (
+          <Stack
+            stacksItems={items}
+            stacksIndex={index}
+            key={index}
+            stacksInfo={this.props.stacksInfo}
+            height={this.props.stacksInfo[index].height}
+            streak={this.props.stacksInfo[index].streak}
+            toggleStack={this.props.toggleStack}
+            logHabit={this.props.logHabit}
+            addHabit={this.props.addHabit}
+            addStack={this.props.addStack}
+            activeStates={this.props.activeStates}
+          />
+        ))
+      )
+    }
+    else {
+      stacksContent = (
+        <EmptyStack>Tap ‘Add’ for stacks, habits & friends</EmptyStack>
+      )
+    }
 
     return (
       <>
@@ -150,22 +192,8 @@ class ViewStacks extends Component {
           lockAxis="y"
           >
 
-          {stacks.map((items, index) => (
+          {stacksContent}
 
-            <Stack
-              stacksItems={items}
-              stacksIndex={index}
-              key={index}
-              stacksInfo={this.props.stacksInfo}
-              height={this.props.stacksInfo[index].height}
-              streak={this.props.stacksInfo[index].streak}
-              toggleStack={this.props.toggleStack}
-              logHabit={this.props.logHabit}
-              addHabit={this.props.addHabit}
-              addStack={this.props.addStack}
-              activeStates={this.props.activeStates}
-            />
-          ))}
           <AddStackSection addModeIsActive={this.props.activeStates.addModeIsActive}>
             <AddButton onClick={() => this.props.addStack(this.props.stacksIndex)}> + Stack </AddButton>
           </AddStackSection>

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import '../App.css';
 import Habit from './Habit';
@@ -105,6 +105,7 @@ const StackBody = styled.ul`
   margin-bottom: 0px;
   margin-top: 10px;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+  min-height: 55px;
 }
 &:after {
   position: absolute;
@@ -154,51 +155,94 @@ const AddButton = styled.div`
 const AddStackSection = styled(AddSection)`
   margin-left:0.625rem;
 `
+const EmptyHabit = styled.div`
+  background-color: #F3F3F3;
+  height: 55px;
+  width:82%;
+  position: absolute;
+  z-index: -1;
+  /* left: 0;
+  right: 0;
+  margin: 0 auto; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color : #C5C5C5;
+  border-radius:11px;
+`
 
 
-function Stack(props){
+class Stack extends Component {
 
-  return (
-    <>
-    <div className="stack" key={props.stacksIndex}>
-      <div className="stackHeader">
-        <Toggle onClick={() => props.toggleStack(props.stacksIndex)}>
-          <Burger open={props.height}>
-            {/* <BurgerInnerDiv open={props.height}></BurgerInnerDiv>*/}
-          </Burger>
-        </Toggle>
-        <StackName>{props.stacksInfo[props.stacksIndex].name}</StackName>
+  render(){
+
+    let habitsContent = null;
+
+    if (this.props.stacksItems[0]){
+      habitsContent = (
+        this.props.stacksItems.map((item, i) => (
+          <Habit
+            key={i}
+            value={item}
+            index={i}
+            collection={this.props.stacksIndex}
+            logHabit={this.props.logHabit}
+            result={this.props.result}
+          />
+        ))
+      )
+    }
+    else {
+      habitsContent = (
+        <EmptyHabit>Tap ‘Add’ to add a habit</EmptyHabit>
+      )
+    }
+
+
+
+    return (
+      <>
+      <div className="stack" key={this.props.stacksIndex}>
+        <div className="stackHeader">
+          <Toggle onClick={() => this.props.toggleStack(this.props.stacksIndex)}>
+            <Burger open={this.props.height}>
+              {/* <BurgerInnerDiv open={props.height}></BurgerInnerDiv>*/}
+            </Burger>
+          </Toggle>
+          <StackName>{this.props.stacksInfo[this.props.stacksIndex].name}</StackName>
+        </div>
+
+        <AnimateHeight duration={ 300 } key={this.props.id} height={this.props.height } >
+            <StackBody>
+              {habitsContent}
+              {/*this.props.stacksItems.map((item, i) => (
+                <Habit
+                  key={i}
+                  value={item}
+                  index={i}
+                  collection={this.props.stacksIndex}
+                  logHabit={this.props.logHabit}
+                  result={this.props.result}
+                />
+              ))*/}
+              <AddSection addModeIsActive={this.props.activeStates.addModeIsActive}>
+                <AddButton onClick={() => this.props.addHabit(this.props.stacksIndex)}> + Habit </AddButton>
+                <AddButton> + Friend </AddButton>
+                {/*props.stacksIndex*/}
+              </AddSection>
+            </StackBody>
+        </AnimateHeight >
+        <StackBottom>
+          <StackLine />
+          <StreakCount>
+            {this.props.stacksInfo[this.props.stacksIndex].streak}
+          </StreakCount>
+        </StackBottom>
       </div>
 
-      <AnimateHeight duration={ 300 } key={props.id} height={ props.height } >
-          <StackBody>
-            {props.stacksItems.map((item, i) => (
-              <Habit
-                key={i}
-                value={item}
-                index={i}
-                collection={props.stacksIndex}
-                logHabit={props.logHabit}
-                result={props.result}
-              />
-            ))}
-            <AddSection addModeIsActive={props.activeStates.addModeIsActive}>
-              <AddButton onClick={() => props.addHabit(props.stacksIndex)}> + Habit </AddButton>
-              <AddButton> + Friend </AddButton>
-              {/*props.stacksIndex*/}
-            </AddSection>
-          </StackBody>
-      </AnimateHeight >
-      <StackBottom>
-        <StackLine />
-        <StreakCount>
-          {props.stacksInfo[props.stacksIndex].streak}
-        </StreakCount>
-      </StackBottom>
-    </div>
-
-    </>
-  )
+      </>
+    )
+  }
 }
 
 export default Stack;
