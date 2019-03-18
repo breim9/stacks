@@ -143,8 +143,6 @@ class ViewStacks extends Component {
           lockAxis="y"
           >
 
-          {console.log("stackInfo ", this.props.stacksInfo)},
-
           {stacks.map((items, index) => (
 
             <Stack

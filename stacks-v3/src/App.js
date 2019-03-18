@@ -182,7 +182,7 @@ class App extends Component {
   /*
   when a habit is tapped it logHabit()
   addHabit opens the addHabitModule and begins the process
-  while AddHabitFormSubmission comples the process.
+  while AddHabitFormSubmission completes the process.
   */
   logHabit = (itemId, stackId) => {
 
@@ -195,7 +195,7 @@ class App extends Component {
     if (updatedResult === "complete"){
       this.habitEasyComplete(itemId, stackId);
     }
-    //if last habit is logged with any result, update streakcounter
+    //if last habit in a stack is logged with any result, update streakcounter
     let lastHabitInStack = newStacks[stackId].length-1;
     if (newStacks[stackId][lastHabitInStack].result !== null){
       shouldUpdateStreakCounter = true;
@@ -285,7 +285,6 @@ class App extends Component {
   updateStreakCounter = (stackId) => {
     let stacksInfo = [...this.state.stacksInfo];
     let finalResult = null;
-    let that = this;
     let streakChange = stacksInfo[stackId].todayStreakChange;
     let stack = [...this.state.stacks[stackId]];
 
@@ -297,7 +296,7 @@ class App extends Component {
       else if(stack[i].result === "miss"){
         finalResult = "failed";
       }
-      else if (stack[i].result === "skip"){
+      else if (stack[i].result === "skip" && finalResult !== "failed" && finalResult !== "incomplete"){
         finalResult = "completed";
       }
       else if (stack[i].result === "neutral"){
@@ -308,8 +307,10 @@ class App extends Component {
 
     if (finalResult === "failed"){
       if (streakChange !== -1){ //only remove 1 if it hasn't already today
-        stacksInfo[stackId].streak--;
-        streakChange = -1;
+        if(stacksInfo[stackId].streak !== 0){ //don't let it go into negatives when streak is at 0
+          stacksInfo[stackId].streak--;
+          streakChange = -1;
+        }
       }
     }
     if (finalResult === "completed"){
@@ -320,11 +321,45 @@ class App extends Component {
     }
 
     stacksInfo[stackId].todayStreakChange = streakChange;
-    that.setState({stacksInfo : stacksInfo})
+    this.setState({stacksInfo : stacksInfo})
 
 
   }
+  newDayUpdateStreakCounter = () => {
+    //check for any incompletes from yesterday and mark as failed
+    //this should run right before the resetForNewDay() does
 
+    console.log("Running newDayUpdateStreakCounter");
+
+    let stacksInfo = [...this.state.stacksInfo];
+    let stacks = [...this.state.stacks];
+    let thereAreNeutralHabits = false;
+
+    stacks.map( (stack, index) => {
+      for (var i = 0; i < stack.length; i++) {
+        if (stack[i].result === "neutral"){
+          //catch any neutrals -- this means logging for the day isn't done yet
+          thereAreNeutralHabits = true;
+          console.log("found a neutral habit");
+        }
+      }
+      if (thereAreNeutralHabits){
+        console.log("#1");
+        if (stacksInfo[index].todayStreakChange !== -1){ //only remove 1 if it hasn't already today
+          console.log("#2");
+          if(stacksInfo[index].streak !== 0){ //don't let it go into negatives when streak is at 0
+            console.log("#3");
+            stacksInfo[index].streak--;
+            stacksInfo[index].todayStreakChange = -1;
+            console.log("-1 to streak counter ");
+          }
+        }
+      }
+    })
+
+    this.setState({stacksInfo : stacksInfo})
+
+  }
 
   //OTHER
   toggleStack = (id) => {
@@ -348,8 +383,6 @@ class App extends Component {
     activeStates.addStackModuleIsActive = false;
     this.setState({activeStates : activeStates});
   }
-
-
   onSortEnd = ({oldIndex, newIndex, collection}) => {
     this.setState(({stacks}) => {
       const newstacks = [...stacks];
@@ -429,6 +462,7 @@ class App extends Component {
         debug.addCounter++;
         debug.addDay = false;
         this.setState({debug : debug})
+        this.newDayUpdateStreakCounter();
         this.resetForNewDay();
       }
     }
@@ -452,6 +486,11 @@ class App extends Component {
   resetForNewDay = () => {
 
     let stacks = [...this.state.stacks];
+
+    for (var i = 0; i < stacks.length; i++) {
+      this.updateStreakCounter(i);
+    }
+
     stacks.map( (stack, index) => {
       stacks[index].map( habit => {
         habit.result = "neutral"
@@ -511,6 +550,7 @@ class App extends Component {
 
     this.populateStateFromStorage();
     if (this.isNewDay) {
+      this.newDayUpdateStreakCounter();
       this.resetForNewDay();
     }
 
