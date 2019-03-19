@@ -10,20 +10,19 @@ TO DO
 
 
 Components
-- Ability to add a new stack
+
+- 'Edit' button
+- Error handling (PWA white screen is whenever react has an error. Could I have plain JS outside of react that appears
+letting users know there's an error?)
+- 'Miss' management component
+
 - stack bar color when all complete
 - Add days of the week to habits
 - Learn push messaging and add reminders to habits (or reminders to your stack)
 
-- Refactor stack info into stacks array with helper functions aware of draggablelist lib
-- 'Edit' button
-- learn when to clear localStorage cache (might fix below problem)
-- figure out why app sometimes goes white until memory cleared
-* stacks had 567kb of website data and went white screen... worked when cleared.
-* that seems like way too little to be a memory leak. Maybe a bug that can happen over time?
 - make the android PWA download pop-up work
-
-
+- Refactor stack info into stacks array with helper functions aware of draggablelist lib
+- animation for successes and misses
 - remove unneeded fonts when style is done
 
 Note:
