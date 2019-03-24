@@ -509,18 +509,23 @@ class App extends Component {
       //should be called whenever a habit is logged asap, in case the users
       //then immediately close the app
       localStorage.setItem("Stacks", JSON.stringify(this.state.stacks));
+      localStorage.setItem("StacksInfo", JSON.stringify(this.state.stacksInfo));
       localStorage.setItem("Date", JSON.stringify(this.state.date));
   }
   populateStateFromStorage = () => {
     //use localStorage to re-populate state when app is refreshed
     let newStack = JSON.parse(localStorage.getItem('Stacks'));
     let newDate = JSON.parse(localStorage.getItem('Date'));
+    let newStackInfo  = JSON.parse(localStorage.getItem('StacksInfo'));
 
     if (newStack) {
       this.setState({ stacks : newStack})
     }
     if (newDate) {
       this.setState({ date : newDate})
+    }
+    if (newStackInfo) {
+      this.setState({ stacksInfo : newStackInfo})
     }
   }
   clearStorage = () => {
