@@ -12,3 +12,12 @@
   overflow:hidden;
   transition: height .5s ease;
 }
+
+@media(min-width: 500px){
+  body {
+    max-width: 500px;
+    position: relative;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+}

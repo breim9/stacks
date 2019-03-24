@@ -141,6 +141,7 @@ class App extends Component {
       debugMode : true,
       addDay : false,
       addCounter : 0,
+      text : " __ ",
     }
   };
 
@@ -592,7 +593,7 @@ class App extends Component {
           addHabitFormSubmission={this.addHabitFormSubmission}
           addStackFormSubmission={this.addStackFormSubmission}
         />
-
+        {this.state.debug.text}
       </AppStyled>
 
     );
