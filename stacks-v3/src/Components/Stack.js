@@ -156,7 +156,7 @@ const AddStackSection = styled(AddSection)`
   margin-left:0.625rem;
 `
 const EmptyHabit = styled.div`
-  background-color: #F3F3F3;
+  /* background-color: #F3F3F3; */
   height: 55px;
   width:82%;
   position: absolute;

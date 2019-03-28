@@ -111,7 +111,7 @@ const DebugContainer = styled.div`
   background-color: #efefef;
 `
 const EmptyStack = styled.div`
-  background-color: #F3F3F3;
+  /* background-color: #F3F3F3; */
   height: 55px;
   width:85%;
   position: absolute;
@@ -170,7 +170,7 @@ class ViewStacks extends Component {
     }
     else {
       stacksContent = (
-        <EmptyStack>Tap ‘Add’ for stacks, habits & friends</EmptyStack>
+        <EmptyStack>Tap Add for stacks, habits & friends</EmptyStack>
       )
     }
 
@@ -191,7 +191,7 @@ class ViewStacks extends Component {
           <AddNew onClick={this.props.toggleAddMode}>
               {addMode}
           </AddNew>
-          <Edit> {editMode} </Edit>
+          <Edit onClick={this.props.toggleEditMode}> {editMode} </Edit>
         </Head>
         <SortableContainer
           onSortEnd={this.props.onSortEnd}

@@ -373,6 +373,9 @@ class App extends Component {
   }
 
   //OTHER
+  editMode = () => {
+    console.log("edit mode active");
+  }
   toggleStack = (id) => {
 
     let stacksInfo = [...this.state.stacksInfo];
@@ -391,6 +394,11 @@ class App extends Component {
   toggleAddMode = () => {
     const activeState = this.state.activeStates;
     activeState.addModeIsActive = !activeState.addModeIsActive;
+    this.setState({ activeState : activeState})
+  }
+  toggleEditMode = () => {
+    let activeState = this.state.activeStates;
+    activeState.editModeIsActive = !activeState.editModeIsActive;
     this.setState({ activeState : activeState})
   }
   cancelActiveModules = () => {
@@ -631,9 +639,7 @@ class App extends Component {
 
   componentDidMount() {
 
-    // populateStateFromStorage().then(this.interval = setInterval(() => this.dayController(), 1000);)
     this.populateStateFromStorage();
-
  }
 
   componentWillUnmount() {
@@ -659,12 +665,14 @@ class App extends Component {
           addHabit={this.addHabit}
           addStack={this.addStack}
           toggleAddMode={this.toggleAddMode}
+          toggleEditMode={this.toggleEditMode}
           cancelActiveModules={this.cancelActiveModules}
           activeStates={this.state.activeStates}
           nextDay={this.forceNextDay}
           clearStorage={this.clearStorage}
           addHabitFormSubmission={this.addHabitFormSubmission}
           addStackFormSubmission={this.addStackFormSubmission}
+
         />
         <DebugLog>
         {this.state.debug.text}
