@@ -30,7 +30,11 @@ const SortableContainer = sortableContainer(({children}) => {
 });
 const Head = styled.div`
   position:fixed;
-  top:0; left:0;
+  max-width: 600px;
+  margin: 0 auto;
+  right: 0;
+  top:0;
+  left: 0;
   display: flex;
   flex-direction : row;
   justify-content: flex-end;
