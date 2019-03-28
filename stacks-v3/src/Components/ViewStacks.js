@@ -133,7 +133,8 @@ class ViewStacks extends Component {
 
   render() {
 
-    const {stacks} = this.props.stacks;
+    const stacks = [...this.props.stacks];
+    let stacksInfo = [...this.props.stacksInfo];
 
     let addMode = "Add";
     let editMode = "Edit";
@@ -142,7 +143,13 @@ class ViewStacks extends Component {
 
     let stacksContent = null;
 
-    if (stacks[0]){ //if stacks isn't empty
+
+    if (stacksInfo[0] && stacksInfo[0].height){ //if stacks isn't empty
+
+      stacks.map((items, index) => {
+        // console.log("Test map, stacksInfo: " + JSON.stringify(this.props.stacksInfo) + " and index: " + index)
+      });
+
       stacksContent = (
         stacks.map((items, index) => (
           <Stack

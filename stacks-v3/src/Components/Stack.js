@@ -62,7 +62,7 @@ const Burger = styled.div`
   }
   & {
     ${( height ) => {
-      if (height.open !== 0){
+      if (height.open !== -10){
         return ( `transform: rotate(90deg);`)
       }
     }}
@@ -206,29 +206,17 @@ class Stack extends Component {
         <div className="stackHeader">
           <Toggle onClick={() => this.props.toggleStack(this.props.stacksIndex)}>
             <Burger open={this.props.height}>
-              {/* <BurgerInnerDiv open={props.height}></BurgerInnerDiv>*/}
             </Burger>
           </Toggle>
           <StackName>{this.props.stacksInfo[this.props.stacksIndex].name}</StackName>
         </div>
 
-        <AnimateHeight duration={ 300 } key={this.props.id} height={this.props.height } >
+        <AnimateHeight duration={ 300 } key={this.props.id} height={this.props.height} >
             <StackBody>
               {habitsContent}
-              {/*this.props.stacksItems.map((item, i) => (
-                <Habit
-                  key={i}
-                  value={item}
-                  index={i}
-                  collection={this.props.stacksIndex}
-                  logHabit={this.props.logHabit}
-                  result={this.props.result}
-                />
-              ))*/}
               <AddSection addModeIsActive={this.props.activeStates.addModeIsActive}>
                 <AddButton onClick={() => this.props.addHabit(this.props.stacksIndex)}> + Habit </AddButton>
                 <AddButton> + Friend </AddButton>
-                {/*props.stacksIndex*/}
               </AddSection>
             </StackBody>
         </AnimateHeight >

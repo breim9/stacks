@@ -8,6 +8,13 @@ import styled, {createGlobalStyle} from 'styled-components';
 /**************
 TO DO
 
+BUG FIX
+I need a boolean that lets me know when I have stuff to populate from local storage and only allows for
+overwriting local storage from a blank state IF AND ONLY IF that boolean is false.
+
+
+
+
 
 Components
 
@@ -103,7 +110,13 @@ const GlobalStyles = createGlobalStyle`
     outline: none;
   }
 `;
-
+const DebugLog = styled.div`
+  position:absolute;
+  width:100%;
+  bottom: 70px;
+  z-index:10;
+  padding-left: 5px;
+`
 
 
 class App extends Component {
@@ -127,6 +140,7 @@ class App extends Component {
     date : {
       lastLoggedDate : null, // day/month/year
       visualDate : null,
+      isFirstDayOfUse : true,
     },
     activeStates : {
       addModeIsActive : false,
@@ -136,12 +150,14 @@ class App extends Component {
     },
     building : {
       stackBeingAddedTo : 0, //defaults to first stack
+      populateFromStateIsComplete : false,
     },
     debug : {
-      debugMode : true,
+      debugMode : false,
       addDay : false,
       addCounter : 0,
       text : " __ ",
+      textCounter : 0,
     }
   };
 
@@ -261,17 +277,19 @@ class App extends Component {
 
     let stacks = [...this.state.stacks];
     let stacksInfo = [...this.state.stacksInfo];
-    stacks.push([]);
+
     stacksInfo.push(
       { name : newStack.stackName, streak: 0, todayStreakChange:0, height : "auto", },
     )
+    stacks.push([]);
+
 
     this.setState({stacksInfo : stacksInfo});
     this.setState({stacks : stacks});
 
-    this.updateLocaLStorage();
     this.cancelActiveModules();
     this.toggleAddMode();
+    this.updateLocaLStorage();
   }
 
   //STREAKS
@@ -318,51 +336,56 @@ class App extends Component {
 
 
   }
+  debugStacksInfo = () => {
+    let stacksInfo = [...this.state.stacksInfo];
+    console.log("in debug stacksInfo is: ", stacksInfo);
+  }
   newDayUpdateStreakCounter = () => {
     //check for any incompletes from yesterday and mark as failed
     //this should run right before the resetForNewDay() does
 
-    console.log("Running newDayUpdateStreakCounter");
-
     let stacksInfo = [...this.state.stacksInfo];
     let stacks = [...this.state.stacks];
     let thereAreNeutralHabits = false;
+
+    console.log("stacksInfo was : ", stacksInfo);
 
     stacks.map( (stack, index) => {
       for (var i = 0; i < stack.length; i++) {
         if (stack[i].result === "neutral"){
           //catch any neutrals -- this means logging for the day isn't done yet
           thereAreNeutralHabits = true;
-          console.log("found a neutral habit");
         }
       }
       if (thereAreNeutralHabits){
-        console.log("#1");
         if (stacksInfo[index].todayStreakChange !== -1){ //only remove 1 if it hasn't already today
-          console.log("#2");
           if(stacksInfo[index].streak !== 0){ //don't let it go into negatives when streak is at 0
-            console.log("#3");
             stacksInfo[index].streak--;
             stacksInfo[index].todayStreakChange = -1;
-            console.log("-1 to streak counter ");
           }
         }
       }
     })
-
+    console.log("stacksInfo has become : ", stacksInfo);
+    return;
     this.setState({stacksInfo : stacksInfo})
 
   }
 
   //OTHER
   toggleStack = (id) => {
-    let toggleStack = this.state.stacksInfo[id];
+
+    let stacksInfo = [...this.state.stacksInfo];
+    let toggleStack = stacksInfo[id];
     let newStack = toggleStack;
 
-    newStack.height = toggleStack.height === 0 ? 'auto' : 0;
+    //note: don't make it height 0, as ViewStacks.js won't render the stack.
+    //update if statement in that file to change this if need be
+    newStack.height = toggleStack.height === -10 ? 'auto' : -10;
+    stacksInfo[id] = newStack;
 
     this.setState({
-      toggleStack : newStack
+      stacksInfo : stacksInfo
     })
   }
   toggleAddMode = () => {
@@ -388,6 +411,10 @@ class App extends Component {
       return {stacks: newstacks};
     });
   };
+  setInterval = () => {
+    //called when populateStateFromStorage is complete on component mount
+    this.interval = setInterval(() => this.dayController(), 1000)
+  }
 
   //DAY-RELATED
   visualDate = (day, month) => {
@@ -433,9 +460,7 @@ class App extends Component {
     }
     return today;
   }
-  isNewDay = () => {
-    let date = {...this.state.date}
-    let lastLoggedDate = date.lastLoggedDate;
+  dayController = () => {
 
     //get the day
     let fullDate = new Date();
@@ -443,27 +468,21 @@ class App extends Component {
     let thisMonth = fullDate.getMonth().toString();
     let thisYear = fullDate.getFullYear().toString();
 
-    //Debug : force add a day for testing
-    if (this.state.debug.debugMode){
-
-      thisDay = fullDate.getDate() + this.state.debug.addCounter;
-      thisDay = thisDay.toString();
-
-      if (this.state.debug.addDay){
-        console.log("day is forced to next");
-        let debug = {...this.state.debug};
-        debug.addCounter++;
-        debug.addDay = false;
-        this.setState({debug : debug})
-        this.newDayUpdateStreakCounter();
-        this.resetForNewDay();
-      }
-    }
-
-
+    //build dates
     let currentDate = thisDay + "/" + thisMonth + "/" + thisYear;
     let visDate = this.visualDate(thisDay, thisMonth);
 
+    //check if is new day
+    if (this.isNewDay(currentDate, visDate)) {
+      this.newDayUpdateStreakCounter();
+      this.resetForNewDay();
+    }
+
+  }
+  isNewDay = (currentDate, visDate) => {
+
+    let date = {...this.state.date}
+    let lastLoggedDate = date.lastLoggedDate;
 
     if (lastLoggedDate === currentDate){
       return false;
@@ -475,9 +494,28 @@ class App extends Component {
       return true;
     }
 
+
+        //Debug : force add a day for testing
+        // if use, put above the return statements in the block above
+        // if (this.state.debug.debugMode){
+        //
+        //   thisDay = fullDate.getDate() + this.state.debug.addCounter;
+        //   thisDay = thisDay.toString();
+        //
+        //   if (this.state.debug.addDay){
+        //     let debug = {...this.state.debug};
+        //     debug.addCounter++;
+        //     debug.addDay = false;
+        //     this.setState({debug : debug})
+        //     this.newDayUpdateStreakCounter();
+        //     this.resetForNewDay();
+        //   }
+        // }
+
   }
   resetForNewDay = () => {
 
+    console.log("resetForNewDay()");
     let stacks = [...this.state.stacks];
 
     for (var i = 0; i < stacks.length; i++) {
@@ -507,27 +545,74 @@ class App extends Component {
 
   //STORAGE
   updateLocaLStorage = () => {
+      let newStackInfo  = JSON.parse(localStorage.getItem('StacksInfo'));
+
       //should be called whenever a habit is logged asap, in case the users
       //then immediately close the app
       localStorage.setItem("Stacks", JSON.stringify(this.state.stacks));
       localStorage.setItem("StacksInfo", JSON.stringify(this.state.stacksInfo));
       localStorage.setItem("Date", JSON.stringify(this.state.date));
+      localStorage.setItem("Debug", JSON.stringify(this.state.debug));
+
+      let debug = {...this.state.debug};
+      debug.text = "Local updated at : " + debug.textCounter;
+      debug.textCounter++;
+
+      this.setState({debug: debug})
   }
   populateStateFromStorage = () => {
+
+    let building = {...this.state.building};
+
     //use localStorage to re-populate state when app is refreshed
+    //when all setState's are complete only then is the interval created for checking if it's a new day
+
     let newStack = JSON.parse(localStorage.getItem('Stacks'));
     let newDate = JSON.parse(localStorage.getItem('Date'));
     let newStackInfo  = JSON.parse(localStorage.getItem('StacksInfo'));
+    let newDebug  = JSON.parse(localStorage.getItem('Debug'));
+
+
+    //don't exit function until all setStates are complete
+    //this could probably be written better
+
+    let stateToBeUpdated = [];
 
     if (newStack) {
-      this.setState({ stacks : newStack})
+      stateToBeUpdated.push("newStack");
+    }
+    if (newDate){
+      stateToBeUpdated.push("newDate");
+    }
+    if (newStackInfo){
+      stateToBeUpdated.push("newStackInfo")
+    }
+    if (newDebug){
+      stateToBeUpdated.push("newDebug")
+    }
+
+    let updateStateArray = (item) => {
+      stateToBeUpdated = stateToBeUpdated.filter(element => element !== item);
+      if (stateToBeUpdated.length === 0){
+        building.populateFromStateIsComplete = true;
+        this.setState({building : building}, () => {this.setInterval();})
+      }
+    }
+
+    if (newStack) {
+      this.setState({ stacks : newStack}, () => {updateStateArray("newStack");})
     }
     if (newDate) {
-      this.setState({ date : newDate})
+      this.setState({ date : newDate}, () => {updateStateArray("newDate");})
     }
     if (newStackInfo) {
-      this.setState({ stacksInfo : newStackInfo})
+      this.setState({ stacksInfo : newStackInfo}, () => {updateStateArray("newStackInfo");})
     }
+    if (newDebug) {
+      this.setState({ debug : newDebug}, () => {updateStateArray("newDebug");})
+    }
+
+
   }
   clearStorage = () => {
     localStorage.clear();
@@ -542,18 +627,14 @@ class App extends Component {
     })
   }
 
+
+
   componentDidMount() {
 
-    this.interval = setInterval(() => this.isNewDay(), 60000);
-
+    // populateStateFromStorage().then(this.interval = setInterval(() => this.dayController(), 1000);)
     this.populateStateFromStorage();
-    if (this.isNewDay) {
-      this.newDayUpdateStreakCounter();
-      this.resetForNewDay();
-    }
 
-
-  }
+ }
 
   componentWillUnmount() {
     clearInterval(this.interval);
@@ -562,14 +643,6 @@ class App extends Component {
 
   render() {
 
-    //check every minute if it's the same day
-    let context = this;
-    setTimeout(function () {
-      if (context.isNewDay()){
-        context.resetForNewDay();
-      }
-    }, 1000);
-
     return (
       <AppStyled>
 
@@ -577,7 +650,7 @@ class App extends Component {
         <GlobalStyles />
 
         <ViewStacks
-          stacks={this.state}
+          stacks={this.state.stacks}
           stacksInfo={this.state.stacksInfo}
           day={this.state.date.visualDate}
           toggleStack={this.toggleStack}
@@ -593,7 +666,9 @@ class App extends Component {
           addHabitFormSubmission={this.addHabitFormSubmission}
           addStackFormSubmission={this.addStackFormSubmission}
         />
+        <DebugLog>
         {this.state.debug.text}
+        </DebugLog>
       </AppStyled>
 
     );
