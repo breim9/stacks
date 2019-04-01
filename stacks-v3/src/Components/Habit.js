@@ -118,9 +118,9 @@ const Action = styled.div`
   -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
 `;
-const DragHandle = sortableHandle(({className}) => <span className={className}>::</span>);
+const DragHandle = sortableHandle(({className}) => <span className={className}>#</span>);
 const DragHandleStyled = styled(DragHandle)`
-  color: white;
+  color: red;
 `;
 
 

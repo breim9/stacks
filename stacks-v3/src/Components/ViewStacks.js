@@ -148,7 +148,7 @@ class ViewStacks extends Component {
     let stacksContent = null;
 
 
-    if (stacksInfo[0] && stacksInfo[0].height){ //if stacks isn't empty
+    if (stacksInfo[0] && stacksInfo[0].height !== null){ //if stacks isn't empty
 
       stacks.map((items, index) => {
         // console.log("Test map, stacksInfo: " + JSON.stringify(this.props.stacksInfo) + " and index: " + index)

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Raven from 'raven-js';
+import { sentry_url, logException } from './config.js';
 import './App.css';
 import ViewStacks from './Components/ViewStacks';
 import {arrayMove} from 'react-sortable-hoc';
@@ -116,6 +118,19 @@ const DebugLog = styled.div`
   z-index:10;
   padding-left: 5px;
 `
+
+
+Raven.config(sentry_url, {
+  tags: {
+    git_commit: 'as09d8f09'
+  }
+}).install();
+
+// logException(new Error('Incomplete Data!'), {
+//   email: 'benreimer9@gmail.com'
+// });
+//
+// Raven.showReportDialog();
 
 
 class App extends Component {
@@ -381,8 +396,7 @@ class App extends Component {
     let toggleStack = stacksInfo[id];
     let newStack = toggleStack;
 
-    //note: don't make it height 0, as ViewStacks.js won't render the stack.
-    //update if statement in that file to change this if need be
+    //note : if you change -10 also change it in 'Burger' styled component in Stack.js
     newStack.height = toggleStack.height === -10 ? 'auto' : -10;
     stacksInfo[id] = newStack;
 
@@ -544,6 +558,8 @@ class App extends Component {
 
   }
   forceNextDay = () => {
+
+    throw("error on reset");
     let debug = {...this.state.debug};
     debug.addDay = true;
     this.setState({debug : debug})
