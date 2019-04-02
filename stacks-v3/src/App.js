@@ -12,15 +12,9 @@ TO DO
 
 
 remove previous serviceworker or clear it's cache atleast when I push an updated version of the app
-^ progress is currently logged in localStorage so it's cool.
+^ progress is currently logged in localStorage so that's safe.
 
 Components
-
-- 'Edit' button
-when edit is active either completly stop loghabit or atleast the edit section of it.
-
-
-
 
 - 'Miss' management component
 
