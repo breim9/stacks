@@ -3,7 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import '../App.css';
 import {sortableElement, sortableHandle} from 'react-sortable-hoc';
-
+import move from '../assets/move.svg';
+import deleteHabitImg from '../assets/delete.svg';
 
 
 /**************
@@ -86,9 +87,23 @@ const HabitText = styled.div`
   vertical-align: top;
 `
 const HabitOptions = styled.div`
-  display: inline-block;
-  margin-left: 20px;
+  margin-right: 1%;
+  margin-left: auto;
   vertical-align: top;
+  height: 100%;
+  align-items: center;
+  ${( {active }) => {
+    if (active === true){
+      return (
+        `display: flex;`
+      )
+    }
+    else {
+      return (
+        `display: none;`
+      )
+    }
+  }}
 `
 const Cue = styled.div`
   font-family: Roboto;
@@ -118,22 +133,32 @@ const Action = styled.div`
   -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
 `;
-const DragHandle = sortableHandle(({className}) => <span className={className}>#</span>);
+const DragHandle = sortableHandle(({className}) => <div className={className}><img src={move} alt="draghandle" /></div>);
 const DragHandleStyled = styled(DragHandle)`
   color: red;
+  height: 50%;
+  > img {
+    height: 100%;
+  }
 `;
+const DeleteHabit = styled.img`
+  margin-left: 10px;
+  height: 50%;
+`
 
 
+//NOTE: Can only pass in objects and functions
 const SortableItem = sortableElement(
-  ({value}) => (
+  ({value, deleteHabit, context, activeStates}) => (
     <Li>
       <Circle result={value.result}/>
       <HabitText>
         <Cue>{value.cue}</Cue>
         <Action>{value.action}</Action>
       </HabitText>
-      <HabitOptions>
+      <HabitOptions active={activeStates.editModeIsActive}>
           <DragHandleStyled/>
+          <DeleteHabit src={deleteHabitImg} alt="deleteHabit" onClick={() => deleteHabit(context.index, context.stacksIndex)}/>
       </HabitOptions>
     </Li>
   )
@@ -141,17 +166,25 @@ const SortableItem = sortableElement(
 
 
 function Habit(props){
+
+  let context = {
+    index : props.index,
+    stacksIndex : props.stacksIndex,
+  }
+
   return (
-      <div onClick={() => props.logHabit(props.index, props.collection)}>
+      <div onClick={() => props.logHabit(props.index, props.stacksIndex)}>
+
         <SortableItem
           value={props.value}
           index={props.index}
-          result={props.result}
-          collection={props.collection}
+          context={context}
+          deleteHabit = {props.deleteHabit}
+          activeStates={props.activeStates}
         />
       </div>
   )
 }
-
+// }
 
 export default Habit;

@@ -10,19 +10,18 @@ import styled, {createGlobalStyle} from 'styled-components';
 /**************
 TO DO
 
-BUG FIX
-I need a boolean that lets me know when I have stuff to populate from local storage and only allows for
-overwriting local storage from a blank state IF AND ONLY IF that boolean is false.
 
-
-
-
+remove previous serviceworker or clear it's cache atleast when I push an updated version of the app
+^ progress is currently logged in localStorage so it's cool.
 
 Components
 
 - 'Edit' button
-- Error handling (PWA white screen is whenever react has an error. Could I have plain JS outside of react that appears
-letting users know there's an error?)
+when edit is active either completly stop loghabit or atleast the edit section of it.
+
+
+
+
 - 'Miss' management component
 
 - stack bar color when all complete
@@ -119,13 +118,12 @@ const DebugLog = styled.div`
   padding-left: 5px;
 `
 
-
-Raven.config(sentry_url, {
-  tags: {
-    git_commit: 'as09d8f09'
-  }
-}).install();
-
+//
+// Raven.config(sentry_url, {
+//   tags: {
+//     git_commit: 'as09d8f09'
+//   }
+// }).install();
 // logException(new Error('Incomplete Data!'), {
 //   email: 'benreimer9@gmail.com'
 // });
@@ -209,18 +207,25 @@ class App extends Component {
   */
   logHabit = (itemId, stackId) => {
 
-    let newStacks = [...this.state.stacks];
-    let habitToUpdate = newStacks[stackId][itemId];
+    let stacks = [...this.state.stacks];
+
+    //leave if no habits in stack or in edit mode
+    if (stacks[stackId].length === 0){return}
+    if (this.state.activeStates.editModeIsActive === true){return}
+
+    let habitToUpdate = stacks[stackId][itemId];
     let result = habitToUpdate.result; //neutral, complete, miss, etc.
     let updatedResult = this.habitResultHandler(result); //toggle to next result
     let shouldUpdateStreakCounter = false;
+
+
 
     if (updatedResult === "complete"){
       this.habitEasyComplete(itemId, stackId);
     }
     //if last habit in a stack is logged with any result, update streakcounter
-    let lastHabitInStack = newStacks[stackId].length-1;
-    if (newStacks[stackId][lastHabitInStack].result !== null){
+    let lastHabitInStack = stacks[stackId].length-1;
+    if (stacks[stackId][lastHabitInStack].result !== null){
       shouldUpdateStreakCounter = true;
     }
 
@@ -231,7 +236,7 @@ class App extends Component {
     habitToUpdate.log[today] = updatedResult;
 
 
-    this.setState({stacks : newStacks}, function stateUpdateComplete(){
+    this.setState({stacks : stacks}, function stateUpdateComplete(){
       this.updateLocaLStorage();
       if (shouldUpdateStreakCounter) {
         this.updateStreakCounter(stackId)
@@ -304,6 +309,13 @@ class App extends Component {
     this.cancelActiveModules();
     this.toggleAddMode();
     this.updateLocaLStorage();
+  }
+  deleteHabit = (itemId, stackId) => {
+
+    let stacks = [...this.state.stacks];
+    stacks[stackId].splice(itemId, 1);
+    this.setState({stacks : stacks});
+
   }
 
   //STREAKS
@@ -662,6 +674,8 @@ class App extends Component {
   }
 
 
+
+
   render() {
 
     return (
@@ -669,7 +683,6 @@ class App extends Component {
 
         <Typography />
         <GlobalStyles />
-
         <ViewStacks
           stacks={this.state.stacks}
           stacksInfo={this.state.stacksInfo}
@@ -678,6 +691,7 @@ class App extends Component {
           logHabit={this.logHabit}
           onSortEnd={this.onSortEnd}
           addHabit={this.addHabit}
+          deleteHabit={this.deleteHabit}
           addStack={this.addStack}
           toggleAddMode={this.toggleAddMode}
           toggleEditMode={this.toggleEditMode}

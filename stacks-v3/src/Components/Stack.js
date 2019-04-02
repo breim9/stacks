@@ -185,9 +185,11 @@ class Stack extends Component {
             key={i}
             value={item}
             index={i}
-            collection={this.props.stacksIndex}
+            stacksIndex={this.props.stacksIndex}
             logHabit={this.props.logHabit}
+            deleteHabit={this.props.deleteHabit}
             result={this.props.result}
+            activeStates={this.props.activeStates}
           />
         ))
       )

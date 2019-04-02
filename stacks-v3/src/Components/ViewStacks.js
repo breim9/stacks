@@ -166,6 +166,7 @@ class ViewStacks extends Component {
             toggleStack={this.props.toggleStack}
             logHabit={this.props.logHabit}
             addHabit={this.props.addHabit}
+            deleteHabit={this.props.deleteHabit}
             addStack={this.props.addStack}
             activeStates={this.props.activeStates}
           />
