@@ -9,18 +9,6 @@ import AddStackModule from './AddStackModule';
 
 /**************
 Holds the Daily Stacks View
-
-
-TO DO
-
-- 'add' button
-  - addOptions
-  - cancel
-
-- display stacks and habits
-
-- display empty stacks component if no stacks
-
 **************/
 
 
@@ -143,7 +131,7 @@ class ViewStacks extends Component {
     let addMode = "Add";
     let editMode = "Edit";
     if (this.props.activeStates.addModeIsActive){addMode = "Cancel"}
-    if (this.props.activeStates.editModeIsActive){editMode = "Cancel"}
+    if (this.props.activeStates.editModeIsActive){editMode = "Done"}
 
     let stacksContent = null;
 

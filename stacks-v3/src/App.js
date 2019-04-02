@@ -11,21 +11,25 @@ import styled, {createGlobalStyle} from 'styled-components';
 TO DO
 
 
-remove previous serviceworker or clear it's cache atleast when I push an updated version of the app
-^ progress is currently logged in localStorage so that's safe.
+[! Priority Components]
+- 'Miss' management 
 
-Components
-
-- 'Miss' management component
-
-- stack bar color when all complete
+[Complete Habits]
 - Add days of the week to habits
 - Learn push messaging and add reminders to habits (or reminders to your stack)
 
+[Complete Options]
+- edit stack, habit, cue name (inline?)
+- other option button + functionality
+
+[Other]
 - make the android PWA download pop-up work
+- stack bar color when all complete
 - Refactor stack info into stacks array with helper functions aware of draggablelist lib
 - animation for successes and misses
 - remove unneeded fonts when style is done
+remove previous serviceworker or clear it's cache atleast when I push an updated version of the app
+^ progress is currently logged in localStorage so that's safe.
 
 Note:
 array of habits (stacks[]) is separate from array of stack info (stacksInfo[])
