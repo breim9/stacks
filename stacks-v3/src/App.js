@@ -119,11 +119,11 @@ const DebugLog = styled.div`
 `
 
 //
-// Raven.config(sentry_url, {
-//   tags: {
-//     git_commit: 'as09d8f09'
-//   }
-// }).install();
+Raven.config(sentry_url, {
+  tags: {
+    git_commit: 'as09d8f09'
+  }
+}).install();
 // logException(new Error('Incomplete Data!'), {
 //   email: 'benreimer9@gmail.com'
 // });
