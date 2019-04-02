@@ -266,6 +266,17 @@ class App extends Component {
     this.setState({ activeStates : activeStates });
     this.setState({ building : building });
   }
+  checkForNullHabits = () => {
+    let stacks = [...this.state.stacks];
+
+    stacks.forEach((stack, stackId) => {
+      stack.forEach((habit, habitId) => {
+        if (habit === null){
+          this.deleteHabit(habitId, stackId);
+        }
+      })
+    })
+  }
   addHabitFormSubmission = (newHabit) => {
 
     let stackId = this.state.building.stackBeingAddedTo;
@@ -310,10 +321,10 @@ class App extends Component {
     this.toggleAddMode();
     this.updateLocaLStorage();
   }
-  deleteHabit = (itemId, stackId) => {
+  deleteHabit = (habitId, stackId) => {
 
     let stacks = [...this.state.stacks];
-    stacks[stackId].splice(itemId, 1);
+    stacks[stackId].splice(habitId, 1);
     this.setState({stacks : stacks});
 
   }
@@ -364,7 +375,6 @@ class App extends Component {
   }
   debugStacksInfo = () => {
     let stacksInfo = [...this.state.stacksInfo];
-    console.log("in debug stacksInfo is: ", stacksInfo);
   }
   newDayUpdateStreakCounter = () => {
     //check for any incompletes from yesterday and mark as failed
@@ -373,8 +383,6 @@ class App extends Component {
     let stacksInfo = [...this.state.stacksInfo];
     let stacks = [...this.state.stacks];
     let thereAreNeutralHabits = false;
-
-    console.log("stacksInfo was : ", stacksInfo);
 
     stacks.map( (stack, index) => {
       for (var i = 0; i < stack.length; i++) {
@@ -392,8 +400,7 @@ class App extends Component {
         }
       }
     })
-    console.log("stacksInfo has become : ", stacksInfo);
-    return;
+
     this.setState({stacksInfo : stacksInfo})
 
   }
@@ -417,14 +424,26 @@ class App extends Component {
     })
   }
   toggleAddMode = () => {
-    const activeState = this.state.activeStates;
-    activeState.addModeIsActive = !activeState.addModeIsActive;
-    this.setState({ activeState : activeState})
+    const activeStates = this.state.activeStates;
+    activeStates.addModeIsActive = !activeStates.addModeIsActive;
+
+    //toggle off editMode if it's on
+    if (activeStates.editModeIsActive){
+      activeStates.editModeIsActive = false;
+    }
+
+    this.setState({ activeStates : activeStates})
   }
   toggleEditMode = () => {
-    let activeState = this.state.activeStates;
-    activeState.editModeIsActive = !activeState.editModeIsActive;
-    this.setState({ activeState : activeState})
+    let activeStates = this.state.activeStates;
+    activeStates.editModeIsActive = !activeStates.editModeIsActive;
+
+    //toggle off addMode if it's on
+    if (activeStates.addModeIsActive){
+      activeStates.addModeIsActive = false;
+    }
+
+    this.setState({ activeStates : activeStates})
   }
   cancelActiveModules = () => {
     let activeStates = {...this.state.activeStates};
@@ -517,6 +536,23 @@ class App extends Component {
     let date = {...this.state.date}
     let lastLoggedDate = date.lastLoggedDate;
 
+
+    //Debug : force add a day for testing
+    // if (this.state.debug.debugMode){
+    //
+    //   thisDay = fullDate.getDate() + this.state.debug.addCounter;
+    //   thisDay = thisDay.toString();
+    //
+    //   if (this.state.debug.addDay){
+    //     let debug = {...this.state.debug};
+    //     debug.addCounter++;
+    //     debug.addDay = false;
+    //     this.setState({debug : debug})
+    //     this.newDayUpdateStreakCounter();
+    //     this.resetForNewDay();
+    //   }
+    // }
+
     if (lastLoggedDate === currentDate){
       return false;
     }
@@ -526,24 +562,6 @@ class App extends Component {
       this.setState({ date : date})
       return true;
     }
-
-
-        //Debug : force add a day for testing
-        // if use, put above the return statements in the block above
-        // if (this.state.debug.debugMode){
-        //
-        //   thisDay = fullDate.getDate() + this.state.debug.addCounter;
-        //   thisDay = thisDay.toString();
-        //
-        //   if (this.state.debug.addDay){
-        //     let debug = {...this.state.debug};
-        //     debug.addCounter++;
-        //     debug.addDay = false;
-        //     this.setState({debug : debug})
-        //     this.newDayUpdateStreakCounter();
-        //     this.resetForNewDay();
-        //   }
-        // }
 
   }
   resetForNewDay = () => {
@@ -571,7 +589,6 @@ class App extends Component {
   }
   forceNextDay = () => {
 
-    throw("error on reset");
     let debug = {...this.state.debug};
     debug.addDay = true;
     this.setState({debug : debug})
@@ -701,11 +718,11 @@ class App extends Component {
           clearStorage={this.clearStorage}
           addHabitFormSubmission={this.addHabitFormSubmission}
           addStackFormSubmission={this.addStackFormSubmission}
-
+          checkForNullHabits={this.checkForNullHabits}
         />
-        <DebugLog>
+        {/*<DebugLog>
         {this.state.debug.text}
-        </DebugLog>
+        </DebugLog>*/}
       </AppStyled>
 
     );

@@ -50,6 +50,15 @@ const Circle = styled.div`
   border: solid 2px #C5C5C5;
   transition: box-shadow .3s;
   transition: background-color .2s;
+  ${( {disabled} ) => {
+    if (disabled === true){
+      return (
+        `opacity:0.5;`)
+    }
+    else {
+      return (`opacity:1;`)
+    }
+  }}
   ${( {result} ) => {
     if (result === "complete"){
       return (
@@ -85,6 +94,15 @@ const HabitText = styled.div`
   display: inline-block;
   margin-left: 20px;
   vertical-align: top;
+  ${( {disabled} ) => {
+    if (disabled === true){
+      return (
+        `opacity:0.5;`)
+    }
+    else {
+      return (`opacity:1;`)
+    }
+  }}
 `
 const HabitOptions = styled.div`
   margin-right: 1%;
@@ -151,8 +169,8 @@ const DeleteHabit = styled.img`
 const SortableItem = sortableElement(
   ({value, deleteHabit, context, activeStates}) => (
     <Li>
-      <Circle result={value.result}/>
-      <HabitText>
+      <Circle result={value.result} disabled={activeStates.editModeIsActive}/>
+      <HabitText disabled={activeStates.editModeIsActive}>
         <Cue>{value.cue}</Cue>
         <Action>{value.action}</Action>
       </HabitText>
@@ -174,7 +192,6 @@ function Habit(props){
 
   return (
       <div onClick={() => props.logHabit(props.index, props.stacksIndex)}>
-
         <SortableItem
           value={props.value}
           index={props.index}
