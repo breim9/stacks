@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Button/arrow</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Screens" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2-copy" transform="translate(-319.000000, -225.000000)">
+            <g id="Button/arrowLight" transform="translate(319.000000, 225.000000)">
+                <g id="button/arrowLight">
+                    <g id="button/arrow" fill-rule="nonzero">
+                        <rect id="Rectangle-Copy-33" stroke="#FEBE00" stroke-width="2" x="1" y="1" width="30" height="30" rx="5.04"></rect>
+                        <polygon id="Path" fill="#FEBE00" transform="translate(16.785714, 16.880952) rotate(-270.000000) translate(-16.785714, -16.880952) " points="16.7855473 12.2142857 8.78571429 19.922234 10.4719814 21.547619 16.7857143 15.4642512 23.0987792 21.547619 24.7857143 19.922234"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

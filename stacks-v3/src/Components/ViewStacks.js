@@ -5,6 +5,7 @@ import '../App.css';
 import {sortableContainer} from 'react-sortable-hoc';
 import AddHabitModule from './AddHabitModule';
 import AddStackModule from './AddStackModule';
+import MissModule from './MissModule';
 
 
 /**************
@@ -136,7 +137,7 @@ class ViewStacks extends Component {
     let stacksContent = null;
 
     this.props.checkForNullHabits();
-    // &&  stacksInfo[0].length !== null
+
     if (stacksInfo[0]){ //if stacks isn't empty
 
       stacksContent = (
@@ -166,6 +167,7 @@ class ViewStacks extends Component {
 
     return (
       <>
+        <MissModule/>
         <AddHabitModule
             activeStates={this.props.activeStates}
             cancelActiveModules={this.props.cancelActiveModules}

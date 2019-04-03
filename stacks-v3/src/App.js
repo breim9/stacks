@@ -12,7 +12,7 @@ TO DO
 
 
 [! Priority Components]
-- 'Miss' management 
+- 'Miss' management
 
 [Complete Habits]
 - Add days of the week to habits
@@ -130,7 +130,6 @@ Raven.config(sentry_url, {
 
 
 class App extends Component {
-
 
 
   state = {
@@ -325,6 +324,7 @@ class App extends Component {
     stacks[stackId].splice(habitId, 1);
     this.setState({stacks : stacks});
 
+    this.updateLocaLStorage();
   }
 
   //STREAKS
