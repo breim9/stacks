@@ -158,13 +158,6 @@ function AddStackModule(props){
               value="Submit"
               disabled={props.isSubmitting}
             />
-
-            <input
-              type="reset"
-              value="Reset"
-              onClick={props.handleReset}
-              disabled={!props.dirty}
-            />
           </FormStyled>
         )}
       </Formik>
