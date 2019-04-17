@@ -197,12 +197,13 @@ class ViewStacks extends Component {
             <AddButton onClick={() => this.props.addStack(this.props.stacksIndex)}> + Stack </AddButton>
           </AddStackSection>
         </SortableContainer>
+        {/*
         <DebugContainer>
           <p style={{color : '#aaa', marginLeft : '5px'}}>Debug Controls</p>
           <Reset onClick={this.props.clearStorage}>Reset</Reset>
           <NextDay onClick={this.props.nextDay}>Next Day</NextDay>
         </DebugContainer>
-
+        */}
     </>
     );
   }
