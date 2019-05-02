@@ -1,28 +1,26 @@
-import React, { Component } from 'react';
-import Raven from 'raven-js';
-import { sentry_url, logException } from './config.js';
-import './App.css';
-import ViewStacks from './Components/ViewStacks';
-import {arrayMove} from 'react-sortable-hoc';
-import styled, {createGlobalStyle} from 'styled-components';
-
+import React, { Component } from "react";
+import Raven from "raven-js";
+import { sentry_url, logException } from "./config.js";
+import "./App.css";
+import ViewStacks from "./Components/ViewStacks";
+import { arrayMove } from "react-sortable-hoc";
+import styled, { createGlobalStyle } from "styled-components";
 
 /**************
 TO DO
 
+[Stage One] Redesign app and refactor code.
+- TDD
+- Integrate Sentry properly
+- Redux
 
-[! Priority Components]
-- 'Miss' management
-
-[Complete Habits]
+[Stage Two] Complete the missing elements of basic components
 - Add days of the week to habits
-- Learn push messaging and add reminders to habits (or reminders to your stack)
-
-[Complete Options]
+- Add reminders
 - edit stack, habit, cue name (inline?)
 - other option button + functionality
 
-[Other]
+[Stage Three] Small fixes and clean up
 - make the android PWA download pop-up work
 - stack bar color when all complete
 - Refactor stack info into stacks array with helper functions aware of draggablelist lib
@@ -30,6 +28,14 @@ TO DO
 - remove unneeded fonts when style is done
 remove previous serviceworker or clear it's cache atleast when I push an updated version of the app
 ^ progress is currently logged in localStorage so that's safe.
+
+[Stage Four] Next components
+- 'Miss' management
+- Friends (with static content until next stage)
+
+[Stage Five] Database & Backend
+
+
 
 Note:
 array of habits (stacks[]) is separate from array of stack info (stacksInfo[])
@@ -45,19 +51,19 @@ to add a loader to webpack
 **************/
 
 const AppStyled = styled.div`
-  position:relative;
-  width:100%;
+  position: relative;
+  width: 100%;
   height: 100%;
   margin: 0 auto;
   display: block;
   padding-top: 100px;
 
-  @media(min-width:769px){
+  @media (min-width: 769px) {
     .App {
       margin-top: 40px;
     }
   }
-`
+`;
 const Typography = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Poppins:500,700');
   @import url('https://fonts.googleapis.com/css?family=Roboto:300i,400,500');
@@ -109,17 +115,17 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 const DebugLog = styled.div`
-  position:absolute;
-  width:100%;
+  position: absolute;
+  width: 100%;
   bottom: 70px;
-  z-index:10;
+  z-index: 10;
   padding-left: 5px;
-`
+`;
 
 //
 Raven.config(sentry_url, {
   tags: {
-    git_commit: 'as09d8f09'
+    git_commit: "as09d8f09"
   }
 }).install();
 // logException(new Error('Incomplete Data!'), {
@@ -128,12 +134,9 @@ Raven.config(sentry_url, {
 //
 // Raven.showReportDialog();
 
-
 class App extends Component {
-
-
   state = {
-    stacks : [
+    stacks: [
       /*[ //stack 1
         {
           action : "Meditate 15mins",
@@ -143,59 +146,58 @@ class App extends Component {
         },
       ],*/
     ],
-    stacksInfo : [
+    stacksInfo: [
       // { name : "Routine One", streak: 0, todayStreakChange:0, height : "auto", },
     ],
-    date : {
-      lastLoggedDate : null, // day/month/year
-      visualDate : null,
-      isFirstDayOfUse : true,
+    date: {
+      lastLoggedDate: null, // day/month/year
+      visualDate: null,
+      isFirstDayOfUse: true
     },
-    activeStates : {
-      addModeIsActive : false,
-      addHabitModuleIsActive : false,
-      addStackModuleIsActive : false,
-      editModeIsActive : false,
+    activeStates: {
+      addModeIsActive: false,
+      addHabitModuleIsActive: false,
+      addStackModuleIsActive: false,
+      editModeIsActive: false
     },
-    building : {
-      stackBeingAddedTo : 0, //defaults to first stack
-      populateFromStateIsComplete : false,
+    building: {
+      stackBeingAddedTo: 0, //defaults to first stack
+      populateFromStateIsComplete: false
     },
-    debug : {
-      debugMode : false,
-      addDay : false,
-      addCounter : 0,
-      text : " __ ",
-      textCounter : 0,
+    debug: {
+      debugMode: false,
+      addDay: false,
+      addCounter: 0,
+      text: " __ ",
+      textCounter: 0
     }
   };
 
-
   //HABITS AND STACKS
-  habitResultHandler = (result) => {
-    switch (result){
-      case "neutral" :
+  habitResultHandler = result => {
+    switch (result) {
+      case "neutral":
         return "complete";
-      case "complete" :
+      case "complete":
         return "miss";
-      case "miss" :
+      case "miss":
         return "skip";
-      case "skip" :
+      case "skip":
         return "neutral";
-      default :
+      default:
         return "neutral";
     }
-  }
+  };
   habitEasyComplete = (itemId, stackId) => {
     //turn earlier habits in stack into 'complete' if they're neutral
 
     let stack = [...this.state.stacks[stackId]];
     for (var i = 0; i < stack.length; i++) {
-      if (itemId > i && stack[i].result === "neutral"){
-        this.logHabit(i, stackId)
+      if (itemId > i && stack[i].result === "neutral") {
+        this.logHabit(i, stackId);
       }
     }
-  }
+  };
 
   /*
   when a habit is tapped it logHabit()
@@ -203,26 +205,27 @@ class App extends Component {
   while AddHabitFormSubmission completes the process.
   */
   logHabit = (itemId, stackId) => {
-
     let stacks = [...this.state.stacks];
 
     //leave if no habits in stack or in edit mode
-    if (stacks[stackId].length === 0){return}
-    if (this.state.activeStates.editModeIsActive === true){return}
+    if (stacks[stackId].length === 0) {
+      return;
+    }
+    if (this.state.activeStates.editModeIsActive === true) {
+      return;
+    }
 
     let habitToUpdate = stacks[stackId][itemId];
     let result = habitToUpdate.result; //neutral, complete, miss, etc.
     let updatedResult = this.habitResultHandler(result); //toggle to next result
     let shouldUpdateStreakCounter = false;
 
-
-
-    if (updatedResult === "complete"){
+    if (updatedResult === "complete") {
       this.habitEasyComplete(itemId, stackId);
     }
     //if last habit in a stack is logged with any result, update streakcounter
-    let lastHabitInStack = stacks[stackId].length-1;
-    if (stacks[stackId][lastHabitInStack].result !== null){
+    let lastHabitInStack = stacks[stackId].length - 1;
+    if (stacks[stackId][lastHabitInStack].result !== null) {
       shouldUpdateStreakCounter = true;
     }
 
@@ -232,148 +235,145 @@ class App extends Component {
     let today = this.state.date.lastLoggedDate;
     habitToUpdate.log[today] = updatedResult;
 
-
-    this.setState({stacks : stacks}, function stateUpdateComplete(){
+    this.setState({ stacks: stacks }, function stateUpdateComplete() {
       this.updateLocaLStorage();
       if (shouldUpdateStreakCounter) {
-        this.updateStreakCounter(stackId)
-      };
-    })
-
-  }
-  addHabit = (stackId) => {
-
-    const activeStates = {...this.state.activeStates};
-    const building = {...this.state.building};
+        this.updateStreakCounter(stackId);
+      }
+    });
+  };
+  addHabit = stackId => {
+    const activeStates = { ...this.state.activeStates };
+    const building = { ...this.state.building };
 
     activeStates.addHabitModuleIsActive = true;
     building.stackBeingAddedTo = stackId;
 
-    this.setState({ activeStates : activeStates });
-    this.setState({ building : building });
-  }
-  addStack = (stackId) => {
-
-    const activeStates = {...this.state.activeStates};
-    const building = {...this.state.building};
+    this.setState({ activeStates: activeStates });
+    this.setState({ building: building });
+  };
+  addStack = stackId => {
+    const activeStates = { ...this.state.activeStates };
+    const building = { ...this.state.building };
 
     activeStates.addStackModuleIsActive = true;
     building.stackBeingAddedTo = stackId;
 
-    this.setState({ activeStates : activeStates });
-    this.setState({ building : building });
-  }
+    this.setState({ activeStates: activeStates });
+    this.setState({ building: building });
+  };
   checkForNullHabits = () => {
     let stacks = [...this.state.stacks];
 
     stacks.forEach((stack, stackId) => {
       stack.forEach((habit, habitId) => {
-        if (habit === null){
+        if (habit === null) {
           this.deleteHabit(habitId, stackId);
         }
-      })
-    })
-  }
-  addHabitFormSubmission = (newHabit) => {
-
+      });
+    });
+  };
+  addHabitFormSubmission = newHabit => {
     let stackId = this.state.building.stackBeingAddedTo;
     let newStack = [...this.state.stacks];
 
     let action = newHabit.action;
     let cue = newHabit.cue;
 
-    newStack[stackId].push(
-      {
-        action : action,
-        cue: cue,
-        result: "neutral",
-        log : {},
-      }
-    )
+    newStack[stackId].push({
+      action: action,
+      cue: cue,
+      result: "neutral",
+      log: {}
+    });
 
-    const building = {...this.state.building};
+    const building = { ...this.state.building };
     building.stackBeingAddedTo = 0; //defaults to first stack
-    this.setState({building : building });
-    this.setState({stacks : newStack})
+    this.setState({ building: building });
+    this.setState({ stacks: newStack });
     this.updateLocaLStorage();
 
     this.cancelActiveModules();
     this.toggleAddMode();
-  }
-  addStackFormSubmission = (newStack) => {
-
+  };
+  addStackFormSubmission = newStack => {
     let stacks = [...this.state.stacks];
     let stacksInfo = [...this.state.stacksInfo];
 
-    stacksInfo.push(
-      { name : newStack.stackName, streak: 0, todayStreakChange:0, height : "auto", },
-    )
+    stacksInfo.push({
+      name: newStack.stackName,
+      streak: 0,
+      todayStreakChange: 0,
+      height: "auto"
+    });
     stacks.push([]);
 
-
-    this.setState({stacksInfo : stacksInfo});
-    this.setState({stacks : stacks});
+    this.setState({ stacksInfo: stacksInfo });
+    this.setState({ stacks: stacks });
 
     this.cancelActiveModules();
     this.toggleAddMode();
     this.updateLocaLStorage();
-  }
+  };
   deleteHabit = (habitId, stackId) => {
-
     let stacks = [...this.state.stacks];
     stacks[stackId].splice(habitId, 1);
-    this.setState({stacks : stacks});
+    this.setState({ stacks: stacks });
 
     this.updateLocaLStorage();
-  }
+  };
 
   //STREAKS
-  updateStreakCounter = (stackId) => {
+  updateStreakCounter = stackId => {
     let stacksInfo = [...this.state.stacksInfo];
     let finalResult = null;
     let streakChange = stacksInfo[stackId].todayStreakChange;
     let stack = [...this.state.stacks[stackId]];
 
     for (var i = 0; i < stack.length; i++) {
-
-      if (stack[i].result === "complete" && finalResult !== "failed" && finalResult !== "incomplete"){
+      if (
+        stack[i].result === "complete" &&
+        finalResult !== "failed" &&
+        finalResult !== "incomplete"
+      ) {
         finalResult = "completed";
-      }
-      else if(stack[i].result === "miss"){
+      } else if (stack[i].result === "miss") {
         finalResult = "failed";
-      }
-      else if (stack[i].result === "skip" && finalResult !== "failed" && finalResult !== "incomplete"){
+      } else if (
+        stack[i].result === "skip" &&
+        finalResult !== "failed" &&
+        finalResult !== "incomplete"
+      ) {
         finalResult = "completed";
-      }
-      else if (stack[i].result === "neutral"){
+      } else if (stack[i].result === "neutral") {
         //catch any neutrals -- this means logging for the day isn't done yet
         finalResult = "incomplete";
       }
     }
 
-    if (finalResult === "failed"){
-      if (streakChange !== -1){ //only remove 1 if it hasn't already today
-        if(stacksInfo[stackId].streak !== 0){ //don't let it go into negatives when streak is at 0
+    if (finalResult === "failed") {
+      if (streakChange !== -1) {
+        //only remove 1 if it hasn't already today
+        if (stacksInfo[stackId].streak !== 0) {
+          //don't let it go into negatives when streak is at 0
           stacksInfo[stackId].streak--;
           streakChange = -1;
         }
       }
     }
-    if (finalResult === "completed"){
-      if (streakChange !== 1){
+    if (finalResult === "completed") {
+      if (streakChange !== 1) {
         stacksInfo[stackId].streak++;
         streakChange = 1;
       }
     }
 
     stacksInfo[stackId].todayStreakChange = streakChange;
-    this.setState({stacksInfo : stacksInfo})
-
-
-  }
+    this.setState({ stacksInfo: stacksInfo });
+  };
   debugStacksInfo = () => {
     let stacksInfo = [...this.state.stacksInfo];
-  }
+  };
   newDayUpdateStreakCounter = () => {
     //check for any incompletes from yesterday and mark as failed
     //this should run right before the resetForNewDay() does
@@ -382,136 +382,131 @@ class App extends Component {
     let stacks = [...this.state.stacks];
     let thereAreNeutralHabits = false;
 
-    stacks.map( (stack, index) => {
+    stacks.map((stack, index) => {
       for (var i = 0; i < stack.length; i++) {
-        if (stack[i].result === "neutral"){
+        if (stack[i].result === "neutral") {
           //catch any neutrals -- this means logging for the day isn't done yet
           thereAreNeutralHabits = true;
         }
       }
-      if (thereAreNeutralHabits){
-        if (stacksInfo[index].todayStreakChange !== -1){ //only remove 1 if it hasn't already today
-          if(stacksInfo[index].streak !== 0){ //don't let it go into negatives when streak is at 0
+      if (thereAreNeutralHabits) {
+        if (stacksInfo[index].todayStreakChange !== -1) {
+          //only remove 1 if it hasn't already today
+          if (stacksInfo[index].streak !== 0) {
+            //don't let it go into negatives when streak is at 0
             stacksInfo[index].streak--;
             stacksInfo[index].todayStreakChange = -1;
           }
         }
       }
-    })
+    });
 
-    this.setState({stacksInfo : stacksInfo})
-
-  }
+    this.setState({ stacksInfo: stacksInfo });
+  };
 
   //OTHER
   editMode = () => {
     console.log("edit mode active");
-  }
-  toggleStack = (id) => {
-
+  };
+  toggleStack = id => {
     let stacksInfo = [...this.state.stacksInfo];
     let toggleStack = stacksInfo[id];
     let newStack = toggleStack;
 
     //note : if you change -10 also change it in 'Burger' styled component in Stack.js
-    newStack.height = toggleStack.height === -10 ? 'auto' : -10;
+    newStack.height = toggleStack.height === -10 ? "auto" : -10;
     stacksInfo[id] = newStack;
 
     this.setState({
-      stacksInfo : stacksInfo
-    })
-  }
+      stacksInfo: stacksInfo
+    });
+  };
   toggleAddMode = () => {
     const activeStates = this.state.activeStates;
     activeStates.addModeIsActive = !activeStates.addModeIsActive;
 
     //toggle off editMode if it's on
-    if (activeStates.editModeIsActive){
+    if (activeStates.editModeIsActive) {
       activeStates.editModeIsActive = false;
     }
 
-    this.setState({ activeStates : activeStates})
-  }
+    this.setState({ activeStates: activeStates });
+  };
   toggleEditMode = () => {
     let activeStates = this.state.activeStates;
     activeStates.editModeIsActive = !activeStates.editModeIsActive;
 
     //toggle off addMode if it's on
-    if (activeStates.addModeIsActive){
+    if (activeStates.addModeIsActive) {
       activeStates.addModeIsActive = false;
     }
 
-    this.setState({ activeStates : activeStates})
-  }
+    this.setState({ activeStates: activeStates });
+  };
   cancelActiveModules = () => {
-    let activeStates = {...this.state.activeStates};
+    let activeStates = { ...this.state.activeStates };
     activeStates.addHabitModuleIsActive = false;
     activeStates.addStackModuleIsActive = false;
-    this.setState({activeStates : activeStates});
-  }
-  onSortEnd = ({oldIndex, newIndex, collection}) => {
-    this.setState(({stacks}) => {
+    this.setState({ activeStates: activeStates });
+  };
+  onSortEnd = ({ oldIndex, newIndex, collection }) => {
+    this.setState(({ stacks }) => {
       const newstacks = [...stacks];
 
-      newstacks[collection] = arrayMove(
-        stacks[collection],
-        oldIndex,
-        newIndex,
-      );
-      return {stacks: newstacks};
+      newstacks[collection] = arrayMove(stacks[collection], oldIndex, newIndex);
+      return { stacks: newstacks };
     });
   };
   setInterval = () => {
     //called when populateStateFromStorage is complete on component mount
-    this.interval = setInterval(() => this.dayController(), 1000)
-  }
+    this.interval = setInterval(() => this.dayController(), 1000);
+  };
 
   //DAY-RELATED
   visualDate = (day, month) => {
     let today = null;
 
     switch (month) {
-      case '0' :
+      case "0":
         today = "Jan " + day;
         break;
-      case '1' :
+      case "1":
         today = "Feb " + day;
         break;
-      case '2' :
+      case "2":
         today = "March " + day;
         break;
-      case '3' :
+      case "3":
         today = "April " + day;
         break;
-      case '4' :
+      case "4":
         today = "May " + day;
         break;
-      case '5' :
+      case "5":
         today = "June " + day;
         break;
-      case '6' :
+      case "6":
         today = "July " + day;
         break;
-      case '7' :
+      case "7":
         today = "Aug " + day;
         break;
-      case '8' :
+      case "8":
         today = "Sept " + day;
         break;
-      case '9' :
+      case "9":
         today = "Oct " + day;
         break;
-      case '10' :
+      case "10":
         today = "Nov " + day;
         break;
-      case '11' :
+      case "11":
         today = "Dec " + day;
         break;
     }
     return today;
-  }
+  };
   dayController = () => {
-
     //get the day
     let fullDate = new Date();
     let thisDay = fullDate.getDate().toString();
@@ -527,13 +522,10 @@ class App extends Component {
       this.newDayUpdateStreakCounter();
       this.resetForNewDay();
     }
-
-  }
+  };
   isNewDay = (currentDate, visDate) => {
-
-    let date = {...this.state.date}
+    let date = { ...this.state.date };
     let lastLoggedDate = date.lastLoggedDate;
-
 
     //Debug : force add a day for testing
     // if (this.state.debug.debugMode){
@@ -551,19 +543,16 @@ class App extends Component {
     //   }
     // }
 
-    if (lastLoggedDate === currentDate){
+    if (lastLoggedDate === currentDate) {
       return false;
-    }
-    else {
+    } else {
       date.lastLoggedDate = currentDate;
       date.visualDate = visDate;
-      this.setState({ date : date})
+      this.setState({ date: date });
       return true;
     }
-
-  }
+  };
   resetForNewDay = () => {
-
     console.log("resetForNewDay()");
     let stacks = [...this.state.stacks];
 
@@ -571,57 +560,52 @@ class App extends Component {
       this.updateStreakCounter(i);
     }
 
-    stacks.map( (stack, index) => {
-      stacks[index].map( habit => {
-        habit.result = "neutral"
-      })
+    stacks.map((stack, index) => {
+      stacks[index].map(habit => {
+        habit.result = "neutral";
+      });
     });
 
     let stacksInfo = [...this.state.stacksInfo];
-    stacksInfo.map( stackInfo => {
+    stacksInfo.map(stackInfo => {
       stackInfo.todayStreakChange = 0;
     });
 
     this.updateLocaLStorage();
-
-  }
+  };
   forceNextDay = () => {
-
-    let debug = {...this.state.debug};
+    let debug = { ...this.state.debug };
     debug.addDay = true;
-    this.setState({debug : debug})
-  }
-
+    this.setState({ debug: debug });
+  };
 
   //STORAGE
   updateLocaLStorage = () => {
-      let newStackInfo  = JSON.parse(localStorage.getItem('StacksInfo'));
+    let newStackInfo = JSON.parse(localStorage.getItem("StacksInfo"));
 
-      //should be called whenever a habit is logged asap, in case the users
-      //then immediately close the app
-      localStorage.setItem("Stacks", JSON.stringify(this.state.stacks));
-      localStorage.setItem("StacksInfo", JSON.stringify(this.state.stacksInfo));
-      localStorage.setItem("Date", JSON.stringify(this.state.date));
-      localStorage.setItem("Debug", JSON.stringify(this.state.debug));
+    //should be called whenever a habit is logged asap, in case the users
+    //then immediately close the app
+    localStorage.setItem("Stacks", JSON.stringify(this.state.stacks));
+    localStorage.setItem("StacksInfo", JSON.stringify(this.state.stacksInfo));
+    localStorage.setItem("Date", JSON.stringify(this.state.date));
+    localStorage.setItem("Debug", JSON.stringify(this.state.debug));
 
-      let debug = {...this.state.debug};
-      debug.text = "Local updated at : " + debug.textCounter;
-      debug.textCounter++;
+    let debug = { ...this.state.debug };
+    debug.text = "Local updated at : " + debug.textCounter;
+    debug.textCounter++;
 
-      this.setState({debug: debug})
-  }
+    this.setState({ debug: debug });
+  };
   populateStateFromStorage = () => {
-
-    let building = {...this.state.building};
+    let building = { ...this.state.building };
 
     //use localStorage to re-populate state when app is refreshed
     //when all setState's are complete only then is the interval created for checking if it's a new day
 
-    let newStack = JSON.parse(localStorage.getItem('Stacks'));
-    let newDate = JSON.parse(localStorage.getItem('Date'));
-    let newStackInfo  = JSON.parse(localStorage.getItem('StacksInfo'));
-    let newDebug  = JSON.parse(localStorage.getItem('Debug'));
-
+    let newStack = JSON.parse(localStorage.getItem("Stacks"));
+    let newDate = JSON.parse(localStorage.getItem("Date"));
+    let newStackInfo = JSON.parse(localStorage.getItem("StacksInfo"));
+    let newDebug = JSON.parse(localStorage.getItem("Debug"));
 
     //don't exit function until all setStates are complete
     //this could probably be written better
@@ -631,71 +615,71 @@ class App extends Component {
     if (newStack) {
       stateToBeUpdated.push("newStack");
     }
-    if (newDate){
+    if (newDate) {
       stateToBeUpdated.push("newDate");
     }
-    if (newStackInfo){
-      stateToBeUpdated.push("newStackInfo")
-    }
-    if (newDebug){
-      stateToBeUpdated.push("newDebug")
-    }
-
-    let updateStateArray = (item) => {
-      stateToBeUpdated = stateToBeUpdated.filter(element => element !== item);
-      if (stateToBeUpdated.length === 0){
-        building.populateFromStateIsComplete = true;
-        this.setState({building : building}, () => {this.setInterval();})
-      }
-    }
-
-    if (newStack) {
-      this.setState({ stacks : newStack}, () => {updateStateArray("newStack");})
-    }
-    if (newDate) {
-      this.setState({ date : newDate}, () => {updateStateArray("newDate");})
-    }
     if (newStackInfo) {
-      this.setState({ stacksInfo : newStackInfo}, () => {updateStateArray("newStackInfo");})
+      stateToBeUpdated.push("newStackInfo");
     }
     if (newDebug) {
-      this.setState({ debug : newDebug}, () => {updateStateArray("newDebug");})
+      stateToBeUpdated.push("newDebug");
     }
 
+    let updateStateArray = item => {
+      stateToBeUpdated = stateToBeUpdated.filter(element => element !== item);
+      if (stateToBeUpdated.length === 0) {
+        building.populateFromStateIsComplete = true;
+        this.setState({ building: building }, () => {
+          this.setInterval();
+        });
+      }
+    };
 
-  }
+    if (newStack) {
+      this.setState({ stacks: newStack }, () => {
+        updateStateArray("newStack");
+      });
+    }
+    if (newDate) {
+      this.setState({ date: newDate }, () => {
+        updateStateArray("newDate");
+      });
+    }
+    if (newStackInfo) {
+      this.setState({ stacksInfo: newStackInfo }, () => {
+        updateStateArray("newStackInfo");
+      });
+    }
+    if (newDebug) {
+      this.setState({ debug: newDebug }, () => {
+        updateStateArray("newDebug");
+      });
+    }
+  };
   clearStorage = () => {
     localStorage.clear();
 
     //return habit circles to neutral for new day
     let stacks = [...this.state.stacks];
 
-    stacks.map( (stack, index) => {
-      stacks[index].map( habit => {
-        habit.result = "neutral"
-      })
-    })
-  }
-
-
+    stacks.map((stack, index) => {
+      stacks[index].map(habit => {
+        habit.result = "neutral";
+      });
+    });
+  };
 
   componentDidMount() {
-
     this.populateStateFromStorage();
- }
+  }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-
-
-
   render() {
-
     return (
       <AppStyled>
-
         <Typography />
         <GlobalStyles />
         <ViewStacks
@@ -722,7 +706,6 @@ class App extends Component {
         {this.state.debug.text}
         </DebugLog>*/}
       </AppStyled>
-
     );
   }
 }
