@@ -122,12 +122,12 @@ const DebugLog = styled.div`
   padding-left: 5px;
 `;
 
-//
-Raven.config(sentry_url, {
-  tags: {
-    git_commit: "as09d8f09"
-  }
-}).install();
+//SENTRY
+// Raven.config(sentry_url, {
+//   tags: {
+//     git_commit: "as09d8f09"
+//   }
+// }).install();
 // logException(new Error('Incomplete Data!'), {
 //   email: 'benreimer9@gmail.com'
 // });
