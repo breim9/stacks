@@ -14,4 +14,4 @@
 View a live version [here](https://stacks-v1.netlify.com/)
 
 ### Stacks is a PWA
-As a progressive web app it can be downloaded as a mobile app.
+As a progressive web app it can be downloaded on a phone. View in browser and choose "save to homepage" 
