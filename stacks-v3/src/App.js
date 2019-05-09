@@ -514,7 +514,7 @@ class App extends Component {
     let thisYear = fullDate.getFullYear().toString();
 
     //build dates
-    let currentDate = thisDay + "/" + thisMonth + "/" + thisYear;
+    let currentDate = `${thisDay}/${thisMonth}/${thisYear}`;
     let visDate = this.visualDate(thisDay, thisMonth);
 
     //check if is new day
