@@ -506,7 +506,28 @@ class App extends Component {
     }
     return today;
   };
-  dayController = () => {};
+  dayController = () => {
+    //get the day
+    let fullDate = new Date();
+    let thisDay = fullDate.getDate().toString();
+    let thisMonth = fullDate.getMonth().toString();
+    let thisYear = fullDate.getFullYear().toString();
+
+    //build dates
+    let currentDate = `${thisDay}/${thisMonth}/${thisYear}`;
+    let visDate = this.visualDate(thisDay, thisMonth);
+
+    //check if is new day
+    if (this.isNewDay(currentDate, visDate)) {
+      this.onNewDay();
+    }
+  };
+
+  onNewDay = () => {
+    this.newDayUpdateStreakCounter();
+    this.resetForNewDay();
+  };
+
   isNewDay = (currentDate, visDate) => {
     let date = { ...this.state.date };
     let lastLoggedDate = date.lastLoggedDate;
