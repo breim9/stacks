@@ -519,9 +519,13 @@ class App extends Component {
 
     //check if is new day
     if (this.isNewDay(currentDate, visDate)) {
-      this.newDayUpdateStreakCounter();
-      this.resetForNewDay();
+      this.onNewDay();
     }
+  };
+
+  onNewDay = () => {
+    this.newDayUpdateStreakCounter();
+    this.resetForNewDay();
   };
 
   isNewDay = (currentDate, visDate) => {
